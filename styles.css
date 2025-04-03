@@ -4,8 +4,10 @@
  }
 
 body {
-   padding: 50px; 
-   background-color: #1a1a1a;
+   background-color: #2B2D42;
+   padding-left: 50px;
+   padding-right: 50px;
+   overflow-x: hidden;
 }
 
  .navigation_bar *{
@@ -186,82 +188,82 @@ body {
  }
 
  /* ================================================ LANDING PAGE HEADER ==============================================*/
- 
+
  .header_parent {
    display: grid;
-   grid-template-columns: repeat(7, 1fr);  /* 7 columns */
-   grid-template-rows: repeat(6, 1fr);    /* 6 rows */
+   grid-template-columns: repeat(7, 1fr);  
+   grid-template-rows: auto auto auto auto auto auto; 
    gap: 2px;
-   background-color: #2B2D42;
-   padding: 50px;
    margin: 0; 
+   align-items: center;
+   height: 100%;
 }
 
 .header_div1 {
    grid-column: span 5; /* Spans 5 columns */
    font-family: "Poppins", sans-serif;
    font-weight: 800;
-   font-style: normal;
    color: #E05A6A;
    font-size: 7.6rem;
    letter-spacing: -0.04em;
-
 }
 
 .header_div2 {
    font-family: "Poppins", sans-serif;
-   grid-column: span 2 / span 2;  
-   grid-column-start: 6; 
-   color:white;
-   display: flex;         /* Enable Flexbox */
+   grid-column: 6 / span 2; /* Spans 2 columns starting from column 6 */
+   color: white;
+   display: flex;
    flex-direction: column;
-   justify-content: center;  /* Center text horizontally */
-   align-items: center;      /* Center text vertically */
-   text-align: justify; 
+   justify-content: center;
+   align-items: center;
+   text-align: justify;
    font-size: 0.8rem;
-   padding-top: 20px;
-   margin-top: 20px;
-   margin-bottom: 30px;
 }
-
 
 .header_div3 {
    color: white;
-   display: flex;         /* Enable Flexbox */
+   display: flex;
    flex-direction: column;
-   justify-content: center;  /* Center text horizontally */
+   justify-content: flex-end; /* Align to bottom */
    align-items: center;
    font-size: 0.8rem;
    font-family: "Poppins", sans-serif;
-   grid-row-start: 2;      /* Starts at the second row */
-   margin-bottom: 75px;
-   justify-content: flex-end;  /* Align content to the bottom */
-   height:64%;      
+   grid-row: 2;
+   height: auto; /* Adjusted height for better responsiveness */
    text-align: center;
+   margin-top: -55px;
+   margin-right: 60px;
 }
-
 
 .header_div4 {
-   grid-column: span 6;  /* Spans 6 columns */
-   grid-row-start: 2;    /* Starts at the second row */
+   grid-column: span 6; /* Spans 6 columns */
+   grid-row: 2;
    font-family: "Poppins", sans-serif;
    font-weight: 800;
-   font-style: normal;
    color: #FCFCFC;
-   font-size: 7.6rem;
+   font-size: 7rem;
    letter-spacing: -0.04em;
+   margin-top: -55px;
 }
 
-.header_div5 {
-   grid-row: span 3; /* Spans 3 rows */
-   grid-row-start: 3; /* Starts at the third row */
-   background-color: black;
+#ticketImage{
+   width: 130px; /* Adjust size as needed */
+   height: auto; /* Maintains aspect ratio */
+   padding-left: -150px;
 }
 
-.header_div6 {
-   grid-column: span 2;  /* Spans 2 columns */
-   grid-row-start: 6;    /* Starts at the 6th row */
-   background-color: orange;
+#bruno{
+   width: 2000px; /* Adjust size as needed */
+   height: auto; /* Maintains aspect ratio */
+   padding-left: -150px;
+   position: absolute;
+   z-index: 10;
+   top: 5px;
+   right: 5px;
+   margin-top: 120px;
+   margin-right: -250px;
 }
+
+
 
        
