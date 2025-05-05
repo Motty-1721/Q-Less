@@ -469,13 +469,14 @@ body {
 .event-banner {
    position: relative;
    width: 100%;
-   height: 240px;
+   height: 400px; /* Increased for a more dramatic banner like the reference */
    color: white;
-   padding: 30px;
    display: flex;
    flex-direction: column;
    justify-content: flex-end;
- }
+   padding: 30px;
+   box-sizing: border-box; /* Add this to include padding in width calculation */
+}
  
  .event-title {
    font-size: 32px;
@@ -493,14 +494,14 @@ body {
  
  /* Main content styles */
  #event-container {
-   max-width: 1200px;
+   width: 100%; /* Change from max-width to width */
    margin: 0 auto;
    padding: 20px;
    display: grid;
    grid-template-columns: 2fr 1fr;
    gap: 30px;
-
- }
+   box-sizing: border-box; /* Add this to include padding in width calculation */
+}
  
  /* Left column - Event details */
  .event-description {
@@ -907,6 +908,11 @@ section:nth-child(even) {
  color: white;
 }                                         
 
+
+
+
+
+ 
 
 
 
