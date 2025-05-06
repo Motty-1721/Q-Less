@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | QLess</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <nav class="navbar" id="navbar">
+        <a href="index.html" class="logo">
+            <div class="logo-icon"></div>
+            <span class="logo-text">Q-less</span>
+        </a>
+
+
+        <div class="nav-links" id="navLinks">
+            <a href="index.html">Home</a>
+            <a href="view_all_1.html">Browse</a>
+            <a href="#">About Us </a>
+            <a href="#">Contact Us</a>
+        </div>
+
+        <div class="auth-buttons" id="authButtons">
+            <button class="login-btn" id="loginBtn">Log In</button>
+            <button class="signup-btn" id="signupBtn">Sign Up</button>
+        </div>
+
+        <div class="user-profile" id="userProfile">
+            <a href="profile.html" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
+                <img src="pics/user.png" alt="Profile Image" id="profileImage">
+                <span class="user-name" id="userName">User Name</span>
+            </a>
+            <button class="logout-btn" id="logoutBtn">Logout</button>
+        </div>
+
+
+        <div class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <span class="close" id="closeLoginModal">&times;</span>
+            <h2 class="modal-title">Log In to Q-less</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="modal-button">Log In</button>
+                <div class="switch-form">
+                    Don't have an account? <a id="switchToSignup">Sign up</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div class="modal" id="signupModal">
+        <div class="modal-content">
+            <span class="close" id="closeSignupModal">&times;</span>
+            <h2 class="modal-title">Sign Up for Q-less</h2>
+            <form id="signupForm">
+                <div class="form-group">
+                    <label for="signupName">Full Name</label>
+                    <input type="text" id="signupName" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email</label>
+                    <input type="email" id="signupEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" required>
+                </div>
+                <button type="submit" class="modal-button">Sign Up</button>
+                <div class="switch-form">
+                    Already have an account? <a id="switchToLogin">Log in</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div class="profile-section">
+        <div class="profile-container">
+            <div class="profile-header">
+                <div class="profile-info">
+                    <div class="user-details">
+                        <h1 id="profile-name">Loading...</h1>
+                        <p id="profile-email">Loading...</p>
+                    </div>
+                    <div class="profile-actions">
+                        <button class="btn btn-outline">
+                            <i class="ri-settings-4-line"></i>
+                            Account Settings
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="section-title">
+                <i class="ri-ticket-2-line"></i>
+                My Tickets
+            </h2>
+
+            <div id="tickets-container">
+                <!-- Tickets will be loaded here -->
+                <div class="no-tickets">
+                    <i class="ri-ticket-2-line"></i>
+                    <h3>No tickets yet</h3>
+                    <p>You haven't purchased any tickets yet. Browse upcoming events and secure your spot!</p>
+                    <a href="index.html" class="btn">
+                        <i class="ri-search-line"></i>
+                        Explore Events
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+    <script src="profile-details.js"></script>
+    <script type="module" src="testimony.js"></script>
+</body>
+</html>

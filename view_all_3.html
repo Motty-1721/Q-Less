@@ -1,77 +1,563 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Shows - Q-less</title>
     <script src="https://cdn.tailwindcss.com/3.4.16"></script>
-    <script>tailwind.config={theme:{extend:{colors:{primary:"#3b82f6",secondary:"#10b981"},borderRadius:{none:"0px",sm:"4px",DEFAULT:"8px",md:"12px",lg:"16px",xl:"20px","2xl":"24px","3xl":"32px",full:"9999px",button:"8px"},height:{"90":"22.5rem"}}}}</script>
+    <script>tailwind.config = { theme: { extend: { colors: { primary: "#3b82f6", secondary: "#10b981" }, borderRadius: { none: "0px", sm: "4px", DEFAULT: "8px", md: "12px", lg: "16px", xl: "20px", "2xl": "24px", "3xl": "32px", full: "9999px", button: "8px" }, height: { "90": "22.5rem" } } } }</script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
     <style>
-        :where([class^="ri-"])::before { content: "\f3c2"; }
+        :where([class^="ri-"])::before {
+            content: "\f3c2";
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             background-color: #2B2D42;
         }
+
+        .min-h-screen {
+            margin-top: 50px;
+        }
+
         .event-card:hover {
             transform: translateY(-4px);
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
         }
+
         .event-card .image-container:hover .overlay {
             opacity: 1;
         }
-        .pagination-item{
+
+        .pagination-item {
             color: white;
         }
 
-        .pagination-item:hover{
+        .pagination-item:hover {
             color: black;
         }
+
         .pagination-item.active {
             background-color: #3b82f6;
             color: black;
         }
+
         input[type="number"]::-webkit-inner-spin-button,
         input[type="number"]::-webkit-outer-spin-button {
             -webkit-appearance: none;
             margin: 0;
         }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: all 0.5s ease;
+        }
+
+        .navbar.scrolled {
+            background-color: rgba(43, 45, 66, 1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            padding: 15px 50px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #6e48aa, #9d50bb);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(157, 80, 187, 0.4);
+        }
+
+        .logo-icon::before {
+            content: "Q";
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo-icon::after {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 2px;
+            background-color: white;
+            transform: rotate(-45deg);
+            bottom: 12px;
+            right: 8px;
+        }
+
+        .logo-text {
+            font-size: 26px;
+            font-weight: 700;
+            background: linear-gradient(to right, #6e48aa, #9d50bb);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 1px;
+            position: relative;
+        }
+
+        .logo-text::after {
+            content: "";
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, #6e48aa, #9d50bb);
+            transform: scaleX(0.7);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover .logo-text::after {
+            transform: scaleX(1);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #ff7eb3;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: #ff7eb3;
+            bottom: -5px;
+            left: 0;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .auth-buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn {
+            background-color: transparent;
+            color: #fff;
+            border: 2px solid #ff7eb3;
+        }
+
+        .login-btn:hover {
+            background-color: rgba(255, 126, 179, 0.2);
+        }
+
+        .signup-btn {
+            background-color: #E05A6A;
+            color: #230a46;
+        }
+
+        .signup-btn:hover {
+            background-color: #ff9cc6;
+            transform: translateY(-2px);
+        }
+
+        .user-profile {
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-profile img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #ff7eb3;
+        }
+
+        .user-name {
+            color: #fff;
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            background-color: transparent;
+            color: #ff7eb3;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .logout-btn:hover {
+            text-decoration: underline;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: rgba(35, 10, 70, 0.95);
+            color: #fff;
+            max-width: 400px;
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            position: relative;
+            animation: modalFadeIn 0.5s;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 20px;
+            cursor: pointer;
+            color: #ff7eb3;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #ff7eb3;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px #ff7eb3;
+        }
+
+        .modal-button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background-color: #ff7eb3;
+            color: #230a46;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-button:hover {
+            background-color: #ff9cc6;
+            transform: translateY(-2px);
+        }
+
+        .switch-form {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .switch-form a {
+            color: #ff7eb3;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .switch-form a:hover {
+            text-decoration: underline;
+        }
+
+        /* Hamburger Menu */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 25px;
+            height: 15px;
+            cursor: pointer;
+            z-index: 1002;
+        }
+
+        .hamburger span {
+            display: block;
+            height: 3px;
+            width: 75%;
+            background-color: #fff;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 15px 20px;
+            }
+
+            .navbar.scrolled {
+                padding: 10px 20px;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 250px;
+                height: 70vh;
+                background-color: rgba(35, 10, 70, 0.98);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 30px;
+                transition: all 0.5s ease;
+                box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+                z-index: 1001;
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .hamburger.active span:nth-child(1) {
+                transform: translateY(9px) rotate(45deg);
+            }
+
+            .hamburger.active span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .hamburger.active span:nth-child(3) {
+                transform: translateY(-3.8px) rotate(-45deg);
+            }
+
+            .auth-buttons button {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+
+            .logo-text {
+                font-size: 20px;
+            }
+
+            body.menu-open {
+                overflow: hidden;
+            }
+        }
     </style>
 </head>
+
 <body>
+    <nav class="navbar" id="navbar">
+        <a href="index.html" class="logo">
+            <div class="logo-icon"></div>
+            <span class="logo-text">Q-less</span>
+        </a>
+
+
+        <div class="nav-links" id="navLinks">
+            <a href="index.html">Home</a>
+            <a href="view_all_1.html">Browse</a>
+            <a href="#">About Us </a>
+            <a href="#">Contact Us</a>
+        </div>
+
+        <div class="auth-buttons" id="authButtons">
+            <button class="login-btn" id="loginBtn">Log In</button>
+            <button class="signup-btn" id="signupBtn">Sign Up</button>
+        </div>
+
+        <div class="user-profile" id="userProfile">
+            <a href="profile.html" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
+                <img src="pics/user.png" alt="Profile Image" id="profileImage">
+                <span class="user-name" id="userName">User Name</span>
+            </a>
+            <button class="logout-btn" id="logoutBtn">Logout</button>
+        </div>
+
+
+        <div class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <span class="close" id="closeLoginModal">&times;</span>
+            <h2 class="modal-title">Log In to Q-less</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="modal-button">Log In</button>
+                <div class="switch-form">
+                    Don't have an account? <a id="switchToSignup">Sign up</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div class="modal" id="signupModal">
+        <div class="modal-content">
+            <span class="close" id="closeSignupModal">&times;</span>
+            <h2 class="modal-title">Sign Up for Q-less</h2>
+            <form id="signupForm">
+                <div class="form-group">
+                    <label for="signupName">Full Name</label>
+                    <input type="text" id="signupName" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email</label>
+                    <input type="email" id="signupEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" required>
+                </div>
+                <button type="submit" class="modal-button">Sign Up</button>
+                <div class="switch-form">
+                    Already have an account? <a id="switchToLogin">Log in</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div class="min-h-screen">
-
         <main class="container mx-auto px-4 py-8">
-
-            <div class="events-container">
+            <div class="view_all_events-container">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <!-- Event 1 -->
-                    <div class="event-item event-card bg-white !rounded-lg shadow-md overflow-hidden transition-all duration-300" data-id="1">
+                    <div class="event-item event-card bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg"
+                        data-id="19">
                         <div class="event-image image-container relative overflow-hidden h-90">
-                            <img src="pics/all_1.webp" class="w-full h-full object-cover object-top">
-                            <div class="overlay absolute inset-0 bg-black bg-opacity-50 opacity-0 transition-opacity flex items-center justify-center">
-                                <button class="ticket-btn bg-primary text-white px-6 py-2 !rounded-button font-medium whitespace-nowrap hover:bg-blue-600 transition-colors">Get Tickets</button>
+                            <img src="pics/all_14.webp" class="w-full h-full object-cover object-top">
+                            <div
+                                class="overlay absolute inset-0 bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <button
+                                    class="ticket-btn bg-primary text-white px-6 py-2 rounded-lg font-medium whitespace-nowrap hover:bg-blue-600 transition-colors">
+                                    Get Tickets
+                                </button>
                             </div>
                         </div>
                         <div class="event-details p-5">
-                            <h3 class="event-title text-xl font-bold text-gray-900 mb-3">BEACH WEATHER ASIA TOUR 2025 LIVE IN MANILA</h3>
+                            <h3 class="event-title text-xl font-bold text-gray-900 mb-3">
+                                RADWIMPS WORLD TOUR 2024 “The way you yawn, and the outcry of Peace” IN MANILA
+                            </h3>
                             <div class="flex items-start">
-                                <div class="event-date flex flex-col items-center justify-center bg-gray-100 rounded-lg p-2 mr-4 w-16">
-                                    <div class="month text-xs font-semibold text-gray-600 uppercase">Aug</div>
-                                    <div class="day text-xl font-bold text-gray-900">23</div>
-                                    <div class="year text-xs text-gray-600">2025</div>
+                                <div
+                                    class="event-date flex flex-col items-center justify-center bg-gray-100 rounded-lg p-2 mr-4 w-16">
+                                    <div class="month text-xs font-semibold text-gray-600 uppercase">May</div>
+                                    <div class="day text-xl font-bold text-gray-900">06</div>
+                                    <div class="year text-xs text-gray-600">2026</div>
                                 </div>
                                 <div class="venue-details">
                                     <p class="venue text-gray-700 flex items-center mb-1">
-                                        <span class="w-5 h-5 flex items-center justify-center mr-1"><i class="ri-map-pin-line"></i></span>
-                                        Skydome, SM North Edsa
+                                        <span class="w-5 h-5 flex items-center justify-center mr-1">
+                                            <i class="ri-map-pin-line"></i>
+                                        </span>
+                                        Araneta Coliseum
                                     </p>
                                     <p class="text-gray-600 flex items-center">
-                                        <span class="w-5 h-5 flex items-center justify-center mr-1"><i class="ri-time-line"></i></span>
-                                        6:00PM
+                                        <span class="w-5 h-5 flex items-center justify-center mr-1">
+                                            <i class="ri-time-line"></i>
+                                        </span>
+                                        8:00PM
                                     </p>
                                 </div>
                             </div>
@@ -79,29 +565,41 @@
                     </div>
 
                     <!-- Event 2 -->
-                    <div class="event-item event-card bg-white !rounded-lg shadow-md overflow-hidden transition-all duration-300" data-id="5">
+                    <div class="event-item event-card bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg"
+                        data-id="20">
                         <div class="event-image image-container relative overflow-hidden h-90">
-                            <img src="pics/all_2.webp" class="w-full h-full object-cover object-top">
-                            <div class="overlay absolute inset-0 bg-black bg-opacity-50 opacity-0 transition-opacity flex items-center justify-center">
-                                <button class="ticket-btn bg-primary text-white px-6 py-2 !rounded-button font-medium whitespace-nowrap hover:bg-blue-600 transition-colors">Get Tickets</button>
+                            <img src="pics/all_15.webp" class="w-full h-full object-cover object-top">
+                            <div
+                                class="overlay absolute inset-0 bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <button
+                                    class="ticket-btn bg-primary text-white px-6 py-2 rounded-lg font-medium whitespace-nowrap hover:bg-blue-600 transition-colors">
+                                    Get Tickets
+                                </button>
                             </div>
                         </div>
                         <div class="event-details p-5">
-                            <h3 class="event-title text-xl font-bold text-gray-900 mb-3">2025 KAI SOLO CONCERT TOUR IN MANILA</h3>
+                            <h3 class="event-title text-xl font-bold text-gray-900 mb-3">
+                                ARCH ENEMY DECEIVERS ASIA TOUR 2026
+                            </h3>
                             <div class="flex items-start">
-                                <div class="event-date flex flex-col items-center justify-center bg-gray-100 rounded-lg p-2 mr-4 w-16">
-                                    <div class="month text-xs font-semibold text-gray-600 uppercase">Jul</div>
-                                    <div class="day text-xl font-bold text-gray-900">27</div>
-                                    <div class="year text-xs text-gray-600">2025</div>
+                                <div
+                                    class="event-date flex flex-col items-center justify-center bg-gray-100 rounded-lg p-2 mr-4 w-16">
+                                    <div class="month text-xs font-semibold text-gray-600 uppercase">May</div>
+                                    <div class="day text-xl font-bold text-gray-900">15</div>
+                                    <div class="year text-xs text-gray-600">2026</div>
                                 </div>
                                 <div class="venue-details">
                                     <p class="venue text-gray-700 flex items-center mb-1">
-                                        <span class="w-5 h-5 flex items-center justify-center mr-1"><i class="ri-map-pin-line"></i></span>
-                                        Smart Araneta Coliseum
+                                        <span class="w-5 h-5 flex items-center justify-center mr-1">
+                                            <i class="ri-map-pin-line"></i>
+                                        </span>
+                                        Skydome, SM City North Edsa
                                     </p>
                                     <p class="text-gray-600 flex items-center">
-                                        <span class="w-5 h-5 flex items-center justify-center mr-1"><i class="ri-time-line"></i></span>
-                                        6:00 PM
+                                        <span class="w-5 h-5 flex items-center justify-center mr-1">
+                                            <i class="ri-time-line"></i>
+                                        </span>
+                                        8:00PM
                                     </p>
                                 </div>
                             </div>
@@ -109,29 +607,41 @@
                     </div>
 
                     <!-- Event 3 -->
-                    <div class="event-item event-card bg-white !rounded-lg shadow-md overflow-hidden transition-all duration-300" data-id="6">
+                    <div class="event-item event-card bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg"
+                        data-id="21">
                         <div class="event-image image-container relative overflow-hidden h-90">
-                            <img src="pics/coming_6.webp" class="w-full h-full object-cover object-top">
-                            <div class="overlay absolute inset-0 bg-black bg-opacity-50 opacity-0 transition-opacity flex items-center justify-center">
-                                <button class="ticket-btn bg-primary text-white px-6 py-2 !rounded-button font-medium whitespace-nowrap hover:bg-blue-600 transition-colors">Get Tickets</button>
+                            <img src="pics/all_16.webp" class="w-full h-full object-cover object-top">
+                            <div
+                                class="overlay absolute inset-0 bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <button
+                                    class="ticket-btn bg-primary text-white px-6 py-2 rounded-lg font-medium whitespace-nowrap hover:bg-blue-600 transition-colors">
+                                    Get Tickets
+                                </button>
                             </div>
                         </div>
                         <div class="event-details p-5">
-                            <h3 class="event-title text-xl font-bold text-gray-900 mb-3">MAYDAY PARADE IN MANILA</h3>
+                            <h3 class="event-title text-xl font-bold text-gray-900 mb-3">
+                                WOODZ SOLO CONCERT 'UNFADING SENSE' IN MANILA
+                            </h3>
                             <div class="flex items-start">
-                                <div class="event-date flex flex-col items-center justify-center bg-gray-100 rounded-lg p-2 mr-4 w-16">
-                                    <div class="month text-xs font-semibold text-gray-600 uppercase">Sep</div>
-                                    <div class="day text-xl font-bold text-gray-900">24</div>
-                                    <div class="year text-xs text-gray-600">2025</div>
+                                <div
+                                    class="event-date flex flex-col items-center justify-center bg-gray-100 rounded-lg p-2 mr-4 w-16">
+                                    <div class="month text-xs font-semibold text-gray-600 uppercase">Jan</div>
+                                    <div class="day text-xl font-bold text-gray-900">06</div>
+                                    <div class="year text-xs text-gray-600">2026</div>
                                 </div>
                                 <div class="venue-details">
                                     <p class="venue text-gray-700 flex items-center mb-1">
-                                        <span class="w-5 h-5 flex items-center justify-center mr-1"><i class="ri-map-pin-line"></i></span>
-                                        Smart Araneta Coliseum
+                                        <span class="w-5 h-5 flex items-center justify-center mr-1">
+                                            <i class="ri-map-pin-line"></i>
+                                        </span>
+                                        New Frontier Theater
                                     </p>
                                     <p class="text-gray-600 flex items-center">
-                                        <span class="w-5 h-5 flex items-center justify-center mr-1"><i class="ri-time-line"></i></span>
-                                        6:00 PM
+                                        <span class="w-5 h-5 flex items-center justify-center mr-1">
+                                            <i class="ri-time-line"></i>
+                                        </span>
+                                        6:00PM
                                     </p>
                                 </div>
                             </div>
@@ -139,29 +649,41 @@
                     </div>
 
                     <!-- Event 4 -->
-                    <div class="event-item event-card bg-white !rounded-lg shadow-md overflow-hidden transition-all duration-300" data-id="1">
+                    <div class="event-item event-card bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg"
+                        data-id="22">
                         <div class="event-image image-container relative overflow-hidden h-90">
-                            <img src="pics/coming_4.webp" class="w-full h-full object-cover object-top">
-                            <div class="overlay absolute inset-0 bg-black bg-opacity-50 opacity-0 transition-opacity flex items-center justify-center">
-                                <button class="ticket-btn bg-primary text-white px-6 py-2 !rounded-button font-medium whitespace-nowrap hover:bg-blue-600 transition-colors">Get Tickets</button>
+                            <img src="pics/all_17.webp" class="w-full h-full object-cover object-top">
+                            <div
+                                class="overlay absolute inset-0 bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <button
+                                    class="ticket-btn bg-primary text-white px-6 py-2 rounded-lg font-medium whitespace-nowrap hover:bg-blue-600 transition-colors">
+                                    Get Tickets
+                                </button>
                             </div>
                         </div>
                         <div class="event-details p-5">
-                            <h3 class="event-title text-xl font-bold text-gray-900 mb-3">NECK DEEP LIVE IN MANILA</h3>
+                            <h3 class="event-title text-xl font-bold text-gray-900 mb-3">
+                                SILVERSTEIN LIVE IN MANILA
+                            </h3>
                             <div class="flex items-start">
-                                <div class="event-date flex flex-col items-center justify-center bg-gray-100 rounded-lg p-2 mr-4 w-16">
-                                    <div class="month text-xs font-semibold text-gray-600 uppercase">May</div>
-                                    <div class="day text-xl font-bold text-gray-900">11</div>
-                                    <div class="year text-xs text-gray-600">2025</div>
+                                <div
+                                    class="event-date flex flex-col items-center justify-center bg-gray-100 rounded-lg p-2 mr-4 w-16">
+                                    <div class="month text-xs font-semibold text-gray-600 uppercase">Oct</div>
+                                    <div class="day text-xl font-bold text-gray-900">31</div>
+                                    <div class="year text-xs text-gray-600">2026</div>
                                 </div>
                                 <div class="venue-details">
                                     <p class="venue text-gray-700 flex items-center mb-1">
-                                        <span class="w-5 h-5 flex items-center justify-center mr-1"><i class="ri-map-pin-line"></i></span>
-                                        New Frontier Threater
+                                        <span class="w-5 h-5 flex items-center justify-center mr-1">
+                                            <i class="ri-map-pin-line"></i>
+                                        </span>
+                                        Skydome, SM City North EDSA
                                     </p>
                                     <p class="text-gray-600 flex items-center">
-                                        <span class="w-5 h-5 flex items-center justify-center mr-1"><i class="ri-time-line"></i></span>
-                                        8:00 PM
+                                        <span class="w-5 h-5 flex items-center justify-center mr-1">
+                                            <i class="ri-time-line"></i>
+                                        </span>
+                                        8:00PM
                                     </p>
                                 </div>
                             </div>
@@ -169,29 +691,41 @@
                     </div>
 
                     <!-- Event 5 -->
-                    <div class="event-item event-card bg-white !rounded-lg shadow-md overflow-hidden transition-all duration-300" data-id="4">
+                    <div class="event-item event-card bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg"
+                        data-id="23">
                         <div class="event-image image-container relative overflow-hidden h-90">
-                            <img src="pics/coming_3.webp" class="w-full h-full object-cover object-top">
-                            <div class="overlay absolute inset-0 bg-black bg-opacity-50 opacity-0 transition-opacity flex items-center justify-center">
-                                <button class="ticket-btn bg-primary text-white px-6 py-2 !rounded-button font-medium whitespace-nowrap hover:bg-blue-600 transition-colors">Get Tickets</button>
+                            <img src="pics/all_18.webp" class="w-full h-full object-cover object-top">
+                            <div
+                                class="overlay absolute inset-0 bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <button
+                                    class="ticket-btn bg-primary text-white px-6 py-2 rounded-lg font-medium whitespace-nowrap hover:bg-blue-600 transition-colors">
+                                    Get Tickets
+                                </button>
                             </div>
                         </div>
                         <div class="event-details p-5">
-                            <h3 class="event-title text-xl font-bold text-gray-900 mb-3">2025 XIUMIN FAN CONCERT in MANILA</h3>
+                            <h3 class="event-title text-xl font-bold text-gray-900 mb-3">
+                                MAYDAY PARADE LIVE IN DAVAO
+                            </h3>
                             <div class="flex items-start">
-                                <div class="event-date flex flex-col items-center justify-center bg-gray-100 rounded-lg p-2 mr-4 w-16">
-                                    <div class="month text-xs font-semibold text-gray-600 uppercase">May</div>
-                                    <div class="day text-xl font-bold text-gray-900">10</div>
-                                    <div class="year text-xs text-gray-600">2025</div>
+                                <div
+                                    class="event-date flex flex-col items-center justify-center bg-gray-100 rounded-lg p-2 mr-4 w-16">
+                                    <div class="month text-xs font-semibold text-gray-600 uppercase">Oct</div>
+                                    <div class="day text-xl font-bold text-gray-900">30</div>
+                                    <div class="year text-xs text-gray-600">2026</div>
                                 </div>
                                 <div class="venue-details">
                                     <p class="venue text-gray-700 flex items-center mb-1">
-                                        <span class="w-5 h-5 flex items-center justify-center mr-1"><i class="ri-map-pin-line"></i></span>
-                                        New Frontier Theater
+                                        <span class="w-5 h-5 flex items-center justify-center mr-1">
+                                            <i class="ri-map-pin-line"></i>
+                                        </span>
+                                        SMX Convention Center Davao
                                     </p>
                                     <p class="text-gray-600 flex items-center">
-                                        <span class="w-5 h-5 flex items-center justify-center mr-1"><i class="ri-time-line"></i></span>
-                                        6:00 PM
+                                        <span class="w-5 h-5 flex items-center justify-center mr-1">
+                                            <i class="ri-time-line"></i>
+                                        </span>
+                                        8:00PM
                                     </p>
                                 </div>
                             </div>
@@ -199,29 +733,41 @@
                     </div>
 
                     <!-- Event 6 -->
-                    <div class="event-item event-card bg-white !rounded-lg shadow-md overflow-hidden transition-all duration-300" data-id="3">
+                    <div class="event-item event-card bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg"
+                        data-id="24">
                         <div class="event-image image-container relative overflow-hidden h-90">
-                            <img src="pics/coming_2.webp" class="w-full h-full object-cover object-top">
-                            <div class="overlay absolute inset-0 bg-black bg-opacity-50 opacity-0 transition-opacity flex items-center justify-center">
-                                <button class="ticket-btn bg-primary text-white px-6 py-2 !rounded-button font-medium whitespace-nowrap hover:bg-blue-600 transition-colors">Get Tickets</button>
+                            <img src="pics/all_19.webp" class="w-full h-full object-cover object-top">
+                            <div
+                                class="overlay absolute inset-0 bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <button
+                                    class="ticket-btn bg-primary text-white px-6 py-2 rounded-lg font-medium whitespace-nowrap hover:bg-blue-600 transition-colors">
+                                    Get Tickets
+                                </button>
                             </div>
                         </div>
                         <div class="event-details p-5">
-                            <h3 class="event-title text-xl font-bold text-gray-900 mb-3">2025 LEE MINHO ASIA FANMEETING TOUR ‘MINHOVERSE’ IN MANILA</h3>
+                            <h3 class="event-title text-xl font-bold text-gray-900 mb-3">
+                                AGAINST THE CURRENT 'NIGHTMARES & DAYDREAMS' 2026 WORLD TOUR IN MANILA
+                            </h3>
                             <div class="flex items-start">
-                                <div class="event-date flex flex-col items-center justify-center bg-gray-100 rounded-lg p-2 mr-4 w-16">
-                                    <div class="month text-xs font-semibold text-gray-600 uppercase">Apr</div>
-                                    <div class="day text-xl font-bold text-gray-900">26</div>
-                                    <div class="year text-xs text-gray-600">2025</div>
+                                <div
+                                    class="event-date flex flex-col items-center justify-center bg-gray-100 rounded-lg p-2 mr-4 w-16">
+                                    <div class="month text-xs font-semibold text-gray-600 uppercase">Oct</div>
+                                    <div class="day text-xl font-bold text-gray-900">08</div>
+                                    <div class="year text-xs text-gray-600">2026</div>
                                 </div>
                                 <div class="venue-details">
                                     <p class="venue text-gray-700 flex items-center mb-1">
-                                        <span class="w-5 h-5 flex items-center justify-center mr-1"><i class="ri-map-pin-line"></i></span>
-                                        SM Mall of Asia Arena
+                                        <span class="w-5 h-5 flex items-center justify-center mr-1">
+                                            <i class="ri-map-pin-line"></i>
+                                        </span>
+                                        Skydome, SM City North EDSA
                                     </p>
                                     <p class="text-gray-600 flex items-center">
-                                        <span class="w-5 h-5 flex items-center justify-center mr-1"><i class="ri-time-line"></i></span>
-                                        6:00 PM
+                                        <span class="w-5 h-5 flex items-center justify-center mr-1">
+                                            <i class="ri-time-line"></i>
+                                        </span>
+                                        8:00PM
                                     </p>
                                 </div>
                             </div>
@@ -229,29 +775,41 @@
                     </div>
 
                     <!-- Event 7 -->
-                    <div class="event-item event-card bg-white !rounded-lg shadow-md overflow-hidden transition-all duration-300" data-id="2">
+                    <div class="event-item event-card bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg"
+                        data-id="25">
                         <div class="event-image image-container relative overflow-hidden h-90">
-                            <img src="pics/coming_1.webp" class="w-full h-full object-cover object-top">
-                            <div class="overlay absolute inset-0 bg-black bg-opacity-50 opacity-0 transition-opacity flex items-center justify-center">
-                                <button class="ticket-btn bg-primary text-white px-6 py-2 !rounded-button font-medium whitespace-nowrap hover:bg-blue-600 transition-colors">Get Tickets</button>
+                            <img src="pics/all_20.webp" class="w-full h-full object-cover object-top">
+                            <div
+                                class="overlay absolute inset-0 bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <button
+                                    class="ticket-btn bg-primary text-white px-6 py-2 rounded-lg font-medium whitespace-nowrap hover:bg-blue-600 transition-colors">
+                                    Get Tickets
+                                </button>
                             </div>
                         </div>
                         <div class="event-details p-5">
-                            <h3 class="event-title text-xl font-bold text-gray-900 mb-3">STATE CHAMPS IN MANILA</h3>
+                            <h3 class="event-title text-xl font-bold text-gray-900 mb-3">
+                                SAOSIN ASIA TOUR 2023 LIVE IN MANILA
+                            </h3>
                             <div class="flex items-start">
-                                <div class="event-date flex flex-col items-center justify-center bg-gray-100 rounded-lg p-2 mr-4 w-16">
-                                    <div class="month text-xs font-semibold text-gray-600 uppercase">Apr</div>
-                                    <div class="day text-xl font-bold text-gray-900">11</div>
-                                    <div class="year text-xs text-gray-600">2025</div>
+                                <div
+                                    class="event-date flex flex-col items-center justify-center bg-gray-100 rounded-lg p-2 mr-4 w-16">
+                                    <div class="month text-xs font-semibold text-gray-600 uppercase">Nov</div>
+                                    <div class="day text-xl font-bold text-gray-900">3-4</div>
+                                    <div class="year text-xs text-gray-600">2026</div>
                                 </div>
                                 <div class="venue-details">
                                     <p class="venue text-gray-700 flex items-center mb-1">
-                                        <span class="w-5 h-5 flex items-center justify-center mr-1"><i class="ri-map-pin-line"></i></span>
-                                        Events Hall, SM Southmall
+                                        <span class="w-5 h-5 flex items-center justify-center mr-1">
+                                            <i class="ri-map-pin-line"></i>
+                                        </span>
+                                        Skydome, SM City North EDSA
                                     </p>
                                     <p class="text-gray-600 flex items-center">
-                                        <span class="w-5 h-5 flex items-center justify-center mr-1"><i class="ri-time-line"></i></span>
-                                        8:00 PM
+                                        <span class="w-5 h-5 flex items-center justify-center mr-1">
+                                            <i class="ri-time-line"></i>
+                                        </span>
+                                        8:00PM (Both Days)
                                     </p>
                                 </div>
                             </div>
@@ -259,29 +817,41 @@
                     </div>
 
                     <!-- Event 8 -->
-                    <div class="event-item event-card bg-white !rounded-lg shadow-md overflow-hidden transition-all duration-300" data-id="8">
+                    <div class="event-item event-card bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg"
+                        data-id="26">
                         <div class="event-image image-container relative overflow-hidden h-90">
-                            <img src="pics/all_3.webp" class="w-full h-full object-cover object-top">
-                            <div class="overlay absolute inset-0 bg-black bg-opacity-50 opacity-0 transition-opacity flex items-center justify-center">
-                                <button class="ticket-btn bg-primary text-white px-6 py-2 !rounded-button font-medium whitespace-nowrap hover:bg-blue-600 transition-colors">Get Tickets</button>
+                            <img src="pics/all_21.webp" class="w-full h-full object-cover object-top">
+                            <div
+                                class="overlay absolute inset-0 bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <button
+                                    class="ticket-btn bg-primary text-white px-6 py-2 rounded-lg font-medium whitespace-nowrap hover:bg-blue-600 transition-colors">
+                                    Get Tickets
+                                </button>
                             </div>
                         </div>
                         <div class="event-details p-5">
-                            <h3 class="event-title text-xl font-bold text-gray-900 mb-3">TAEYEON CONCERT – The TENSE in MANILA</h3>
+                            <h3 class="event-title text-xl font-bold text-gray-900 mb-3">
+                                ONE OK ROCK LUXURY DISEASE ASIA TOUR 2023
+                            </h3>
                             <div class="flex items-start">
-                                <div class="event-date flex flex-col items-center justify-center bg-gray-100 rounded-lg p-2 mr-4 w-16">
-                                    <div class="month text-xs font-semibold text-gray-600 uppercase">Mar</div>
-                                    <div class="day text-xl font-bold text-gray-900">29</div>
-                                    <div class="year text-xs text-gray-600">2025</div>
+                                <div
+                                    class="event-date flex flex-col items-center justify-center bg-gray-100 rounded-lg p-2 mr-4 w-16">
+                                    <div class="month text-xs font-semibold text-gray-600 uppercase">Sep</div>
+                                    <div class="day text-xl font-bold text-gray-900">26</div>
+                                    <div class="year text-xs text-gray-600">2026</div>
                                 </div>
                                 <div class="venue-details">
                                     <p class="venue text-gray-700 flex items-center mb-1">
-                                        <span class="w-5 h-5 flex items-center justify-center mr-1"><i class="ri-map-pin-line"></i></span>
-                                        SM Mall of Asia Arena
+                                        <span class="w-5 h-5 flex items-center justify-center mr-1">
+                                            <i class="ri-map-pin-line"></i>
+                                        </span>
+                                        Araneta Coliseum
                                     </p>
                                     <p class="text-gray-600 flex items-center">
-                                        <span class="w-5 h-5 flex items-center justify-center mr-1"><i class="ri-time-line"></i></span>
-                                        6:00 PM
+                                        <span class="w-5 h-5 flex items-center justify-center mr-1">
+                                            <i class="ri-time-line"></i>
+                                        </span>
+                                        8:00PM
                                     </p>
                                 </div>
                             </div>
@@ -289,29 +859,41 @@
                     </div>
 
                     <!-- Event 9 -->
-                    <div class="event-item event-card bg-white !rounded-lg shadow-md overflow-hidden transition-all duration-300" data-id="9">
+                    <div class="event-item event-card bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg"
+                        data-id="27">
                         <div class="event-image image-container relative overflow-hidden h-90">
-                            <img src="pics/all_4.webp" class="w-full h-full object-cover object-top">
-                            <div class="overlay absolute inset-0 bg-black bg-opacity-50 opacity-0 transition-opacity flex items-center justify-center">
-                                <button class="ticket-btn bg-primary text-white px-6 py-2 !rounded-button font-medium whitespace-nowrap hover:bg-blue-600 transition-colors">Get Tickets</button>
+                            <img src="pics/all_22.webp" class="w-full h-full object-cover object-top">
+                            <div
+                                class="overlay absolute inset-0 bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <button
+                                    class="ticket-btn bg-primary text-white px-6 py-2 rounded-lg font-medium whitespace-nowrap hover:bg-blue-600 transition-colors">
+                                    Get Tickets
+                                </button>
                             </div>
                         </div>
                         <div class="event-details p-5">
-                            <h3 class="event-title text-xl font-bold text-gray-900 mb-3">RUNNING MAN “RUN 2 U” LIVE IN KUALA LUMPUR</h3>
+                            <h3 class="event-title text-xl font-bold text-gray-900 mb-3">
+                                THE BAY STRIKES BACK TOUR MANILA
+                            </h3>
                             <div class="flex items-start">
-                                <div class="event-date flex flex-col items-center justify-center bg-gray-100 rounded-lg p-2 mr-4 w-16">
-                                    <div class="month text-xs font-semibold text-gray-600 uppercase">Feb</div>
-                                    <div class="day text-xl font-bold text-gray-900">15</div>
-                                    <div class="year text-xs text-gray-600">2025</div>
+                                <div
+                                    class="event-date flex flex-col items-center justify-center bg-gray-100 rounded-lg p-2 mr-4 w-16">
+                                    <div class="month text-xs font-semibold text-gray-600 uppercase">Sep</div>
+                                    <div class="day text-xl font-bold text-gray-900">21</div>
+                                    <div class="year text-xs text-gray-600">2026</div>
                                 </div>
                                 <div class="venue-details">
                                     <p class="venue text-gray-700 flex items-center mb-1">
-                                        <span class="w-5 h-5 flex items-center justify-center mr-1"><i class="ri-map-pin-line"></i></span>
-                                        MIECC, The Mines International Exhibition and Convention Centre
+                                        <span class="w-5 h-5 flex items-center justify-center mr-1">
+                                            <i class="ri-map-pin-line"></i>
+                                        </span>
+                                        Skydome, SM City North EDSA
                                     </p>
                                     <p class="text-gray-600 flex items-center">
-                                        <span class="w-5 h-5 flex items-center justify-center mr-1"><i class="ri-time-line"></i></span>
-                                        5:00 PM
+                                        <span class="w-5 h-5 flex items-center justify-center mr-1">
+                                            <i class="ri-time-line"></i>
+                                        </span>
+                                        6:30PM
                                     </p>
                                 </div>
                             </div>
@@ -322,18 +904,21 @@
 
             <div class="mt-10 flex justify-center">
                 <div class="flex items-center">
-                    <a href="view_all_1.html" class="pagination-item w-10 h-10 flex items-center justify-center !rounded-button border border-gray-300 mr-2 hover:bg-gray-100 active">1</a>
-                    <a href="#" class="pagination-item w-10 h-10 flex items-center justify-center !rounded-button border border-gray-300 mr-2 hover:bg-gray-100">2</a>
-                    <a href="#" class="pagination-item w-10 h-10 flex items-center justify-center !rounded-button border border-gray-300 mr-2 hover:bg-gray-100">3</a>
-                    <a href="#" class="pagination-item w-10 h-10 flex items-center justify-center !rounded-button border border-gray-300 mr-2 hover:bg-gray-100">4</a>
-                    <a href="#" class="pagination-item w-10 h-10 flex items-center justify-center !rounded-button border border-gray-300 hover:bg-gray-100">
-                        <span class="w-5 h-5 flex items-center justify-center"><i class="ri-arrow-right-s-line"></i></span>
-                    </a>
+                    <a href="view_all_1.html"
+                        class="pagination-item w-10 h-10 flex items-center justify-center !rounded-button border border-gray-300 mr-2 hover:bg-gray-100 ">1</a>
+                    <a href="view_all_2.html"
+                        class="pagination-item w-10 h-10 flex items-center justify-center !rounded-button border border-gray-300 mr-2 hover:bg-gray-100">2</a>
+                    <a href="view_all_3.html"
+                        class="pagination-item w-10 h-10 flex items-center justify-center !rounded-button border border-gray-300 mr-2 hover:bg-gray-100 active">3</a>
+                    <a href="view_all_4.html"
+                        class="pagination-item w-10 h-10 flex items-center justify-center !rounded-button border border-gray-300 mr-2 hover:bg-gray-100">4</a>
                 </div>
             </div>
         </main>
     </div>
 
     <script src="main.js"></script>
+    <script type="module" src="testimony.js"></script>
 </body>
+
 </html>
