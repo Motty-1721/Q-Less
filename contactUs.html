@@ -1,0 +1,391 @@
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <title>
+        Contact Form
+    </title>
+    <script src="https://cdn.tailwindcss.com">
+    </script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&amp;display=swap" rel="stylesheet" />
+    <style>
+        body {
+            font-family: "Montserrat", sans-serif;
+        }
+    </style>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body class="min-h-screen flex flex-col pt-24" style="background-color: #2B2D42;">
+    <!-- Navigation Bar -->
+    <nav class="navbar" id="navbar">
+        <a href="index.html" class="logo">
+            <div class="logo-icon"></div>
+            <span class="logo-text">Q-less</span>
+        </a>
+
+
+        <div class="nav-links" id="navLinks">
+            <a href="index.html">Home</a>
+            <a href="view_all_1.html">Browse</a>
+            <a href="aboutUs.html">About Us </a>
+            <a href="contactUs.html">Contact Us</a>
+        </div>
+
+        <div class="auth-buttons" id="authButtons">
+            <button class="login-btn" id="loginBtn">Log In</button>
+            <button class="signup-btn" id="signupBtn">Sign Up</button>
+        </div>
+
+        <div class="user-profile" id="userProfile">
+            <a href="profile.html" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
+                <img src="pics/user.png" alt="Profile Image" id="profileImage">
+                <span class="user-name" id="userName">User Name</span>
+            </a>
+            <button class="logout-btn" id="logoutBtn">Logout</button>
+        </div>
+
+
+        <div class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <span class="close" id="closeLoginModal">&times;</span>
+            <h2 class="modal-title">Log In to Q-less</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="modal-button">Log In</button>
+                <div class="switch-form">
+                    Don't have an account? <a id="switchToSignup">Sign up</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div class="modal" id="signupModal">
+        <div class="modal-content">
+            <span class="close" id="closeSignupModal">&times;</span>
+            <h2 class="modal-title">Sign Up for Q-less</h2>
+            <form id="signupForm">
+                <div class="form-group">
+                    <label for="signupName">Full Name</label>
+                    <input type="text" id="signupName" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email</label>
+                    <input type="email" id="signupEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" required>
+                </div>
+                <button type="submit" class="modal-button">Sign Up</button>
+                <div class="switch-form">
+                    Already have an account? <a id="switchToLogin">Log in</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Content: Contact Form -->
+    <div class="w-full max-w-6xl flex flex-col md:flex-row shadow-lg mx-auto my-12">
+        <!-- Left side with dark overlay and contact info -->
+        <div class="md:w-1/2 relative bg-black bg-opacity-90 flex flex-col justify-center px-10 py-16 text-white">
+            <img alt="Dark glass facade of a modern building with reflections" aria-hidden="true"
+                class="absolute inset-0 w-full h-full object-cover opacity-30"
+                src="c:\Users\kristina\Downloads\glasswall.jpg" width="600" height="800" />
+            <div class="relative z-10 space-y-10 max-w-md">
+                <div class="flex items-start space-x-3">
+                    <i class="fas fa-map-marker-alt mt-1 text-white">
+                    </i>
+                    <div>
+                        <h3 class="font-bold text-white text-lg">
+                            Address
+                        </h3>
+                        <p class="text-gray-300 text-sm leading-relaxed max-w-xs">
+                            HOLY NAME UNIVERSITY
+                            <br />
+                            TAGBILARAN CITY, BOHOL 6300
+                        </p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-3">
+                    <i class="fas fa-phone-alt mt-1 text-white">
+                    </i>
+                    <div>
+                        <h3 class="font-bold text-white text-lg">
+                            Lets Talk
+                        </h3>
+                        <p class="text-green-600 text-sm font-medium">
+                            +9505322567
+                        </p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-3">
+                    <i class="fas fa-envelope mt-1 text-white">
+                    </i>
+                    <div>
+                        <h3 class="font-bold text-white text-lg">
+                            Email
+                        </h3>
+                        <p class="text-green-600 text-sm font-medium">
+                            qless@gmail.com
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Right side with form -->
+        <div class="md:w-1/2 bg-white px-10 py-16 flex flex-col justify-center">
+            <!-- Form container -->
+            <div id="formContainer" class="block">
+                <h2 class="text-gray-800 text-2xl font-semibold mb-10 text-center">
+                    Send Us A Message
+                </h2>
+                <form id="contactForm" class="space-y-6 max-w-lg mx-auto">
+                    <div>
+                        <label class="block text-s font-semibold text-black-600 mb-1 uppercase" for="name">
+                            Tell us your name *
+                        </label>
+                        <div class="flex space-x-4">
+                            <input
+                                class="w-1/2 border border-black-200 rounded px-5 py-4 text-black-500 placeholder-black-500 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent"
+                                id="firstName" name="firstName" placeholder="First name" type="text" required />
+                            <input
+                                class="w-1/2 border border-black-200 rounded px-5 py-4 text-black-500 placeholder-black-500 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent"
+                                id="lastName" name="lastName" placeholder="Last name" type="text" required />
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-s font-bold text-black-600 mb-1 uppercase" for="email">
+                            Enter your email *
+                        </label>
+                        <input
+                            class="w-full border border-black-200 rounded px-5 py-4 text-black-500 placeholder-black-500 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent"
+                            id="email" name="email" placeholder="example@email.com" type="email" required />
+                    </div>
+                    <div>
+                        <label class="block text-s font-bold text-black-600 mb-1 uppercase" for="phone">
+                            Enter phone number
+                        </label>
+                        <input
+                            class="w-full border border-black-200 rounded px-5 py-4 text-black-500 placeholder-black-500 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent"
+                            id="phone" name="phone" placeholder="Eg. +9505223598" type="tel" />
+                    </div>
+                    <div>
+                        <label class="block text-s font-bold mb-5 uppercase" for="message">
+                            Message *
+                        </label>
+                        <textarea
+                            class="w-full border border-black-200 rounded px-5 py-4 text-black-500 placeholder-black-500 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent resize-none"
+                            id="message" name="message" placeholder="Write us a message" rows="4" required></textarea>
+                    </div>
+                    <div class="text-center">
+                        <button
+                            class="bg-green-600 text-white font-bold text-s uppercase px-8 py-3 rounded hover:bg-green-700 transition"
+                            type="submit">
+                            Send Message
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Verification message container (initially hidden) -->
+            <div id="verificationContainer" class="hidden">
+                <div class="text-center space-y-6 max-w-lg mx-auto">
+                    <div class="flex justify-center">
+                        <div class="bg-green-100 rounded-full p-4">
+                            <i class="fas fa-check-circle text-green-600 text-5xl"></i>
+                        </div>
+                    </div>
+                    <h2 class="text-gray-800 text-2xl font-semibold">Thank You!</h2>
+                    <p class="text-gray-600">Your message has been successfully sent. We will contact you very soon!</p>
+                    <div>
+                        <button id="sendAnotherBtn"
+                            class="bg-green-600 text-white font-bold text-s uppercase px-8 py-3 rounded hover:bg-green-700 transition">
+                            Send Another Message
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Black footer section -->
+    <div class="bg-black text-white mt-16">
+        <div class="relative">
+            <img alt="Concert background with audience silhouettes and colorful lighting"
+                class="absolute inset-0 w-full h-full object-cover opacity-50" height="1080"
+                src="pics/concert_background.jpeg" width="1920" />
+            <div class="relative z-10 flex flex-col md:flex-row justify-between p-8 md:p-16">
+                <div class="md:w-1/2">
+                    <h1 class="text-5xl font-bold mb-4">
+                        Q-LESS
+                    </h1>
+                    <p class="mb-4">
+                        Created on a sincere, intense passion for live entertainment, Q-Less is a trailblazer and
+                        innovator with some of the biggest names in Philippine concert history, including pop punk
+                        heroes All Time Low, Mayday Parade, and The Maine; metal legends Slayer, Megadeth, and Anthrax;
+                        and internationally acclaimed KPOP idols BTS, Enhypen, and Seventeen, Q-Less, one of the
+                        country's largest and most diverse companies in the Concerts/Live Events industry, has produced
+                        historic events, concerts, and music festivals.
+                    </p>
+                </div>
+                <div class="md:w-1/2 md:pl-16">
+                    <div class="mb-8">
+                        <h2 class="text-2xl font-bold mb-2">
+                            Office Hours
+                        </h2>
+                        <p>
+                            Monday to Friday: 9AM to 7PM
+                        </p>
+                        <p>
+                            Saturday: 9AM to 2PM
+                        </p>
+                        <div class="mt-4">
+                            <p class="font-bold">
+                                For Business Purposes:
+                            </p>
+                            <p>
+                                - business@qless.ph
+                            </p>
+                            <p>
+                                - partnerships@qless.ph
+                            </p>
+                        </div>
+                        <div class="mt-4">
+                            <p class="font-bold">
+                                For Media &amp; Promotions:
+                            </p>
+                            <p>
+                                media@qless.ph
+                            </p>
+                        </div>
+                        <div class="mt-4">
+                            <p class="font-bold">
+                                For Customer Concerns:
+                            </p>
+                            <p>
+                                sales@qless.ph
+                            </p>
+                        </div>
+                        <div class="mt-4">
+                            <p class="font-bold">
+                                Phone:
+                            </p>
+                            <p>
+                                +639178892233
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="mb-8">
+                        <p class="font-bold">
+                            Career Opportunities:
+                        </p>
+                        <p>
+                            work@qless.ph
+                        </p>
+                    </div>
+                    <div class="mb-8">
+                        <p class="font-bold">
+                            For Internship:
+                        </p>
+                        <p>
+                            intern@qless.ph
+                        </p>
+                    </div>
+                    <div class="mt-8">
+                        <p class="font-bold">
+                            Q-LESS MAGAZINE
+                        </p>
+                        <div class="flex space-x-4 mt-2">
+                            <a href="#">
+                                <i class="fab fa-facebook fa-2x">
+                                </i>
+                            </a>
+                            <a href="#">
+                                <i class="fab fa-twitter fa-2x">
+                                </i>
+                            </a>
+                            <a href="#">
+                                <i class="fab fa-instagram fa-2x">
+                                </i>
+                            </a>
+                            <a href="#">
+                                <i class="fab fa-youtube fa-2x">
+                                </i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="mt-8">
+                        <p class="font-bold">
+                            Q-LESS LIVE
+                        </p>
+                        <div class="flex space-x-4 mt-2">
+                            <a href="#">
+                                <i class="fab fa-facebook fa-2x">
+                                </i>
+                            </a>
+                            <a href="#">
+                                <i class="fab fa-twitter fa-2x">
+                                </i>
+                            </a>
+                            <a href="#">
+                                <i class="fab fa-instagram fa-2x">
+                                </i>
+                            </a>
+                            <a href="#">
+                                <i class="fab fa-youtube fa-2x">
+                                </i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="py-8">
+            <div class="container mx-auto flex flex-wrap justify-center items-center space-x-6">
+                <img alt="Q-LESS Live World logo" class="h-16" height="100" src="pics/LOGO.jpg" width="100" />
+                <img alt="Q-LESS Magazine logo" class="h-16" height="100" src="pics/MAGAZINE.jpg" width="100" />
+                <img alt="Happie Hour logo" class="h-16" height="100" src="pics/Happie Hour.jpg" width="100" />
+                <img alt="Seoul Train logo" class="h-16" height="100" src="pics/Seoul Train Logo.jpeg"
+                    width="100" />
+                <img alt="Merchandise Shop logo" class="h-16" height="100" src="pics/Merch Shop.jpg" width="100" />
+                <img alt="Q-LESS Studios logo" class="h-16" height="100" src="pics/STUDIO.jpg" width="100" />
+                <img alt="Mini Mall logo" class="h-16" height="100" src="pics/mini mall.png" width="100" />
+            </div>
+            <div class="text-center mt-4 text-sm">
+                <p>
+                    Copyright © 2025 |
+                    <span class="text-red-600">
+                        Q-LESS Productions Inc.
+                    </span>
+                    All rights reserved.
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="contactUs.js"></script>
+    <script src="main.js"></script>
+    <script type="module" src="testimony.js"></script>
+</body>
+
+</html>
