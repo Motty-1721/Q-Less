@@ -1,0 +1,803 @@
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctChatButton = document.getElementById('ctChatButton');
+        const ctChatBox = document.getElementById('ctChatBox');
+        const ctCloseChat = document.getElementById('ctCloseChat');
+        const ctChatInput = document.getElementById('ctChatInput');
+        const ctSendButton = document.getElementById('ctSendButton');
+        const ctChatBody = document.getElementById('ctChatBody');
+        const ctTypingIndicator = document.getElementById('ctTypingIndicator');
+        
+        // Constants
+        const STORAGE_KEY = 'concert_ticketing_chat_history';
+        const CHAT_VISIBLE_KEY = 'concert_ticketing_chat_visible';
+        
+        // Knowledge base for the chatbot
+        const knowledgeBase = {
+            greetings: [
+                'hello', 'hi', 'hey', 'greetings', 'good morning', 'good afternoon', 'good evening'
+            ],
+            farewells: [
+                'bye', 'goodbye', 'see you', 'see ya', 'farewell', 'take care'
+            ],
+            keywords: {
+                'concert': ['show', 'performance', 'gig', 'tour', 'live', 'concert'],
+                'ticket': ['tickets', 'booking', 'purchase', 'buy', 'reserve', 'reservation'],
+                'price': ['cost', 'pricing', 'fee', 'charge', 'price', 'prices'],
+                'refund': ['cancel', 'cancellation', 'money back', 'refund', 'return'],
+                'date': ['when', 'schedule', 'time', 'day', 'date'],
+                'venue': ['location', 'place', 'arena', 'stadium', 'where', 'venue'],
+                'artist': ['band', 'musician', 'performer', 'singer', 'dj', 'artist'],
+                'parking': ['park', 'car', 'lot', 'parking'],
+                'seating': ['seat', 'seats', 'vip', 'standing', 'section', 'row', 'area'],
+                'help': ['support', 'assistance', 'help', 'issues', 'problem']
+            },
+            responses: {
+                'greeting': "Hello! How can I help you with your concert tickets today?",
+                'farewell': "Thank you for chatting! If you need any more help with your tickets, just open this chat again. Enjoy the concert!",
+                'concert': "We have several exciting concerts coming up! You can check our full schedule on the Events page. Is there a specific artist you're looking for?",
+                'ticket': "Tickets can be purchased directly through our website. You can browse available shows, select your seats, and complete your purchase securely online. Would you like information about a specific show?",
+                'price': "Ticket prices vary depending on the artist, venue, and seating section. Each event page shows detailed pricing information. Premium packages and VIP experiences are also available for most concerts.",
+                'refund': "Our refund policy allows cancellations up to 72 hours before the event for a full refund. Within 72 hours, we offer exchanges or credit for future events. For special circumstances, please contact our customer service team.",
+                'date': "You can find all concert dates on our Events page. Is there a specific concert you'd like to know the date for?",
+                'venue': "Each concert page includes detailed venue information including address, parking options, and amenities. Most of our events are held at major venues with good public transportation access.",
+                'artist': "We feature a wide range of artists across all music genres. You can browse by genre or search for specific artists on our website. Is there a particular artist you're interested in?",
+                'parking': "Most venues offer on-site parking for an additional fee. Parking passes can be purchased in advance through our website when you buy your tickets. We recommend arriving early as parking fills up quickly for popular shows.",
+                'seating': "Our interactive seating charts let you select exact seats for your concert experience. Options typically include general admission, seated sections, and VIP areas. Would you like tips on the best seats for concert viewing?",
+                'help': "I'm here to help with any concert ticketing questions! You can also reach our customer service team via email at support@concerttickets.com or by phone at (555) 123-4567 during business hours."
+            },
+            quickReplies: {
+                'upcoming concerts': "Here are our featured upcoming concerts for the next month:\n- Taylor Swift World Tour - June 5th\n- Imagine Dragons - June 12th\n- BTS - June 18th\n- Adele - June 25th\nWould you like details about any of these shows?",
+                'ticket info': "Tickets can be purchased online through our secure checkout system. We offer mobile tickets delivered to your email or app, print-at-home options, and will-call pickup. What kind of tickets are you interested in?",
+                'refund policy': "We offer full refunds for cancellations made at least 72 hours before the event. Within 72 hours, you can receive credit toward future tickets or try to exchange for another show. Would you like to know about our ticket insurance option?",
+                'venue directions': "Each venue page on our website includes detailed directions, parking information, and public transportation options. We also provide venue maps showing entrances, amenities, and seating layouts. Which venue are you visiting?"
+            },
+            fallback: "I'm not sure I understand. Could you please rephrase your question about concert tickets or events?"
+        };
+        
+        // Initialize chat history from localStorage
+        function initializeChatHistory() {
+            const chatHistory = loadChatHistory();
+            
+            if (chatHistory.length === 0) {
+                // Add initial greeting if no history exists
+                const initialMessage = {
+                    text: "Hi there! 👋 I'm your concert ticketing assistant. How can I help you today?",
+                    sender: 'bot',
+                    timestamp: new Date().getTime()
+                };
+                
+                addMessageToUI(initialMessage.text, initialMessage.sender);
+                saveChatHistory([initialMessage]);
+                
+                // Add initial quick replies
+                addInitialQuickReplies();
+            } else {
+                // Restore chat history
+                chatHistory.forEach(message => {
+                    addMessageToUI(message.text, message.sender);
+                });
+                
+                // Check if there are any quick replies to add
+                const lastMessage = chatHistory[chatHistory.length - 1];
+                if (lastMessage.sender === 'bot' && shouldAddQuickReplies(lastMessage.text)) {
+                    addQuickReplies();
+                }
+            }
+            
+            // Restore chat visibility state
+            const isChatVisible = localStorage.getItem(CHAT_VISIBLE_KEY) === 'true';
+            if (isChatVisible) {
+                ctChatBox.style.display = 'block';
+            }
+        }
+        
+        function addInitialQuickReplies() {
+            const quickRepliesDiv = document.createElement('div');
+            quickRepliesDiv.classList.add('ct-quick-replies');
+            
+            const initialReplies = [
+                'Upcoming concerts',
+                'Ticket info',
+                'Refund policy',
+                'Venue directions'
+            ];
+            
+            initialReplies.forEach(reply => {
+                const replyButton = document.createElement('div');
+                replyButton.classList.add('ct-quick-reply');
+                replyButton.textContent = reply;
+                quickRepliesDiv.appendChild(replyButton);
+            });
+            
+            ctChatBody.appendChild(quickRepliesDiv);
+        }
+        
+        // Load chat history from localStorage
+        function loadChatHistory() {
+            const historyJson = localStorage.getItem(STORAGE_KEY);
+            return historyJson ? JSON.parse(historyJson) : [];
+        }
+        
+        // Save chat history to localStorage
+        function saveChatHistory(history) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+        }
+        
+        // Add a message to chat history
+        function addMessageToHistory(text, sender) {
+            const chatHistory = loadChatHistory();
+            chatHistory.push({
+                text: text,
+                sender: sender,
+                timestamp: new Date().getTime()
+            });
+            saveChatHistory(chatHistory);
+        }
+        
+        // Toggle chat box visibility
+        ctChatButton.addEventListener('click', function() {
+            if (ctChatBox.style.display === 'block') {
+                ctChatBox.style.display = 'none';
+                localStorage.setItem(CHAT_VISIBLE_KEY, 'false');
+            } else {
+                ctChatBox.style.display = 'block';
+                localStorage.setItem(CHAT_VISIBLE_KEY, 'true');
+                ctChatInput.focus();
+            }
+        });
+        
+        ctCloseChat.addEventListener('click', function() {
+            ctChatBox.style.display = 'none';
+            localStorage.setItem(CHAT_VISIBLE_KEY, 'false');
+        });
+        
+        // Enable/disable send button based on input
+        ctChatInput.addEventListener('input', function() {
+            ctSendButton.disabled = !ctChatInput.value.trim();
+        });
+        
+        // Send message on Enter key
+        ctChatInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && ctChatInput.value.trim()) {
+                sendMessage();
+            }
+        });
+        
+        ctSendButton.addEventListener('click', sendMessage);
+        
+        // Handle quick reply clicks
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('ct-quick-reply')) {
+                const replyText = e.target.textContent;
+                ctChatInput.value = replyText;
+                sendMessage();
+            }
+        });
+        
+        function sendMessage() {
+            const message = ctChatInput.value.trim();
+            if (!message) return;
+            
+            // Add user message to chat
+            addMessageToUI(message, 'user');
+            addMessageToHistory(message, 'user');
+            
+            ctChatInput.value = '';
+            ctSendButton.disabled = true;
+            
+            // Show typing indicator
+            ctTypingIndicator.style.display = 'block';
+            
+            // Simulate bot thinking time
+            setTimeout(function() {
+                ctTypingIndicator.style.display = 'none';
+                
+                // Get bot response
+                const response = getBotResponse(message);
+                addMessageToUI(response, 'bot');
+                addMessageToHistory(response, 'bot');
+                
+                // Scroll to bottom of chat
+                ctChatBody.scrollTop = ctChatBody.scrollHeight;
+            }, 1000);
+        }
+        
+        function addMessageToUI(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('ct-message');
+            messageDiv.classList.add('ct-' + sender + '-message');
+            messageDiv.textContent = text;
+            
+            // Remove quick replies when user sends a message
+            if (sender === 'user') {
+                const quickReplies = document.querySelector('.ct-quick-replies');
+                if (quickReplies) {
+                    quickReplies.remove();
+                }
+            }
+            
+            // Insert message before typing indicator
+            ctChatBody.insertBefore(messageDiv, ctTypingIndicator);
+            
+            // Add quick replies for certain bot responses
+            if (sender === 'bot' && shouldAddQuickReplies(text)) {
+                setTimeout(() => {
+                    addQuickReplies();
+                }, 500);
+            }
+            
+            ctChatBody.scrollTop = ctChatBody.scrollHeight;
+        }
+        
+        function shouldAddQuickReplies(message) {
+            // Add quick replies after certain responses
+            return !message.includes("Would you like") && !message.includes("Which venue") && 
+                   !message.includes("Is there a specific") && !message.includes("Would you like details");
+        }
+        
+        function addQuickReplies() {
+            const quickRepliesDiv = document.createElement('div');
+            quickRepliesDiv.classList.add('ct-quick-replies');
+            
+            const replies = [
+                'How do I buy tickets?',
+                'Upcoming shows',
+                'Ticket prices',
+                'Contact support'
+            ];
+            
+            replies.forEach(reply => {
+                const replyButton = document.createElement('div');
+                replyButton.classList.add('ct-quick-reply');
+                replyButton.textContent = reply;
+                quickRepliesDiv.appendChild(replyButton);
+            });
+            
+            ctChatBody.insertBefore(quickRepliesDiv, ctTypingIndicator);
+            ctChatBody.scrollTop = ctChatBody.scrollHeight;
+        }
+        
+        function getBotResponse(userInput) {
+            const input = userInput.toLowerCase();
+            
+            // Check for quick replies
+            for (const [key, response] of Object.entries(knowledgeBase.quickReplies)) {
+                if (input.includes(key.toLowerCase())) {
+                    return "You can buy tickets in 3 easy steps: 1) Browse our events and select your concert, 2) Choose your seats and ticket quantity, 3) Complete payment through our secure checkout. Would you like me to walk you through the process?";
+            }
+            
+            if (input.includes('payment') || input.includes('pay')) {
+                return "We accept all major credit cards, PayPal, Apple Pay, and Google Pay. All transactions are secure and encrypted. For certain events, we also offer payment plans for ticket purchases.";
+            }
+            
+            if (input.includes('mobile') || input.includes('app')) {
+                return "Yes! Our mobile app is available for both iOS and Android. You can browse concerts, purchase tickets, and access your mobile tickets all in one place. Your tickets will be automatically added to your digital wallet.";
+            }
+            
+            // Fallback response
+            return knowledgeBase.fallback;
+        }
+        
+        // Clear chat history function (useful for testing)
+        window.clearConcertChatHistory = function() {
+            localStorage.removeItem(STORAGE_KEY);
+            localStorage.removeItem(CHAT_VISIBLE_KEY);
+            location.reload();
+        };
+        
+        // Initialization code - wrapped in a check to make sure all elements exist
+        if (ctChatButton && ctChatBox && ctCloseChat && ctChatInput && ctSendButton && ctChatBody && ctTypingIndicator) {
+            // Initialize the chat when DOM is loaded
+            initializeChatHistory();
+        } else {
+            console.error("Concert Ticketing Chatbot: Some elements not found. Make sure to include the chatbot HTML.");
+        }
+    });
+</script> response;
+                }
+            }
+            
+            // Check for greetings
+            for (const greeting of knowledgeBase.greetings) {
+                if (input.includes(greeting)) {
+                    return knowledgeBase.responses.greeting;
+                }
+            }
+            
+            // Check for farewells
+            for (const farewell of knowledgeBase.farewells) {
+                if (input.includes(farewell)) {
+                    return knowledgeBase.responses.farewell;
+                }
+            }
+            
+            // Check for keywords and generate response
+            for (const [category, keywords] of Object.entries(knowledgeBase.keywords)) {
+                for (const keyword of keywords) {
+                    if (input.includes(keyword)) {
+                        return knowledgeBase.responses[category];
+                    }
+                }
+            }
+            
+            // Handle specific questions with contextual answers
+            if (input.includes('how') && input.includes('buy')) {
+                return<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Concert Ticketing Chatbot</title>
+<style>
+    :root {
+        --ct-primary-color: #6c4bc7;
+        --ct-secondary-color: #8f6fe4;
+        --ct-light-color: #f5f5f5;
+        --ct-dark-color: #333;
+        --ct-success-color: #28a745;
+        --ct-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .concert-ticketing-chatbot * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .ct-chat-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 350px;
+        display: flex;
+        flex-direction: column;
+        z-index: 1000;
+    }
+    
+    .ct-chat-button {
+        align-self: flex-end;
+        background-color: var(--ct-primary-color);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: var(--ct-shadow);
+        transition: all 0.3s ease;
+    }
+    
+    .ct-chat-button:hover {
+        background-color: var(--ct-secondary-color);
+        transform: scale(1.05);
+    }
+    
+    .ct-chat-icon {
+        font-size: 24px;
+    }
+    
+    .ct-chat-box {
+        display: none;
+        background-color: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: var(--ct-shadow);
+        margin-bottom: 10px;
+        height: 450px;
+        transition: all 0.3s ease;
+        animation: ct-slideUp 0.3s forwards;
+    }
+    
+    @keyframes ct-slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .ct-chat-header {
+        background-color: var(--ct-primary-color);
+        color: white;
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .ct-chat-title {
+        font-size: 16px;
+        font-weight: 600;
+    }
+    
+    .ct-close-chat {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 20px;
+        cursor: pointer;
+    }
+    
+    .ct-chat-body {
+        height: 345px;
+        padding: 15px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .ct-message {
+        margin-bottom: 10px;
+        max-width: 80%;
+        padding: 10px 15px;
+        border-radius: 18px;
+        line-height: 1.4;
+        font-size: 14px;
+        position: relative;
+    }
+    
+    .ct-bot-message {
+        background-color: #f0f0f0;
+        color: var(--ct-dark-color);
+        align-self: flex-start;
+        border-bottom-left-radius: 5px;
+    }
+    
+    .ct-user-message {
+        background-color: var(--ct-primary-color);
+        color: white;
+        align-self: flex-end;
+        border-bottom-right-radius: 5px;
+    }
+    
+    .ct-typing-indicator {
+        display: none;
+        background-color: #f0f0f0;
+        padding: 8px 15px;
+        border-radius: 18px;
+        margin-bottom: 10px;
+        align-self: flex-start;
+        color: var(--ct-dark-color);
+        font-size: 14px;
+        animation: ct-pulse 1.3s infinite;
+    }
+    
+    @keyframes ct-pulse {
+        0% { opacity: 0.5; }
+        50% { opacity: 1; }
+        100% { opacity: 0.5; }
+    }
+    
+    .ct-chat-footer {
+        display: flex;
+        padding: 10px;
+        border-top: 1px solid #eee;
+        background-color: white;
+    }
+    
+    .ct-chat-input {
+        flex-grow: 1;
+        border: 1px solid #ddd;
+        border-radius: 20px;
+        padding: 8px 15px;
+        font-size: 14px;
+        outline: none;
+        margin-right: 10px;
+    }
+    
+    .ct-chat-input:focus {
+        border-color: var(--ct-primary-color);
+    }
+    
+    .ct-send-button {
+        background-color: var(--ct-primary-color);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 38px;
+        height: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .ct-send-button:hover {
+        background-color: var(--ct-secondary-color);
+    }
+    
+    .ct-send-button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
+    
+    .ct-quick-replies {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 5px;
+        margin-bottom: 10px;
+    }
+    
+    .ct-quick-reply {
+        background-color: #f0f0f0;
+        border: 1px solid #ddd;
+        padding: 6px 12px;
+        border-radius: 16px;
+        font-size: 12px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        color: var(--ct-dark-color);
+    }
+    
+    .ct-quick-reply:hover {
+        background-color: var(--ct-secondary-color);
+        border-color: var(--ct-secondary-color);
+        color: white;
+    }
+    
+    .ct-status-message {
+        color: var(--ct-success-color);
+        text-align: center;
+        font-size: 12px;
+        padding: 5px;
+        margin-bottom: 5px;
+    }
+</style>
+</head>
+<body>
+<div class="concert-ticketing-chatbot">
+    <div class="ct-chat-container" id="ctChatContainer">
+        <div class="ct-chat-box" id="ctChatBox">
+            <div class="ct-chat-header">
+                <div class="ct-chat-title">Concert Support</div>
+                <button class="ct-close-chat" id="ctCloseChat">×</button>
+            </div>
+            <div class="ct-chat-body" id="ctChatBody">
+                <div class="ct-typing-indicator" id="ctTypingIndicator">
+                    Typing...
+                </div>
+            </div>
+            <div class="ct-chat-footer">
+                <input type="text" class="ct-chat-input" id="ctChatInput" placeholder="Type your message..." />
+                <button class="ct-send-button" id="ctSendButton" disabled>
+                    ➤
+                </button>
+            </div>
+        </div>
+        <button class="ct-chat-button" id="ctChatButton">
+            <span class="ct-chat-icon">💬</span>
+        </button>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const chatButton = document.getElementById('chatButton');
+        const chatBox = document.getElementById('chatBox');
+        const closeChat = document.getElementById('closeChat');
+        const chatInput = document.getElementById('chatInput');
+        const sendButton = document.getElementById('sendButton');
+        const chatBody = document.getElementById('chatBody');
+        const typingIndicator = document.getElementById('typingIndicator');
+        
+        // Knowledge base for the chatbot
+        const knowledgeBase = {
+            greetings: [
+                'hello', 'hi', 'hey', 'greetings', 'good morning', 'good afternoon', 'good evening'
+            ],
+            farewells: [
+                'bye', 'goodbye', 'see you', 'see ya', 'farewell', 'take care'
+            ],
+            keywords: {
+                'concert': ['show', 'performance', 'gig', 'tour', 'live', 'concert'],
+                'ticket': ['tickets', 'booking', 'purchase', 'buy', 'reserve', 'reservation'],
+                'price': ['cost', 'pricing', 'fee', 'charge', 'price', 'prices'],
+                'refund': ['cancel', 'cancellation', 'money back', 'refund', 'return'],
+                'date': ['when', 'schedule', 'time', 'day', 'date'],
+                'venue': ['location', 'place', 'arena', 'stadium', 'where', 'venue'],
+                'artist': ['band', 'musician', 'performer', 'singer', 'dj', 'artist'],
+                'parking': ['park', 'car', 'lot', 'parking'],
+                'seating': ['seat', 'seats', 'vip', 'standing', 'section', 'row', 'area'],
+                'help': ['support', 'assistance', 'help', 'issues', 'problem']
+            },
+            responses: {
+                'greeting': "Hello! How can I help you with your concert tickets today?",
+                'farewell': "Thank you for chatting! If you need any more help with your tickets, just open this chat again. Enjoy the concert!",
+                'concert': "We have several exciting concerts coming up! You can check our full schedule on the Events page. Is there a specific artist you're looking for?",
+                'ticket': "Tickets can be purchased directly through our website. You can browse available shows, select your seats, and complete your purchase securely online. Would you like information about a specific show?",
+                'price': "Ticket prices vary depending on the artist, venue, and seating section. Each event page shows detailed pricing information. Premium packages and VIP experiences are also available for most concerts.",
+                'refund': "Our refund policy allows cancellations up to 72 hours before the event for a full refund. Within 72 hours, we offer exchanges or credit for future events. For special circumstances, please contact our customer service team.",
+                'date': "You can find all concert dates on our Events page. Is there a specific concert you'd like to know the date for?",
+                'venue': "Each concert page includes detailed venue information including address, parking options, and amenities. Most of our events are held at major venues with good public transportation access.",
+                'artist': "We feature a wide range of artists across all music genres. You can browse by genre or search for specific artists on our website. Is there a particular artist you're interested in?",
+                'parking': "Most venues offer on-site parking for an additional fee. Parking passes can be purchased in advance through our website when you buy your tickets. We recommend arriving early as parking fills up quickly for popular shows.",
+                'seating': "Our interactive seating charts let you select exact seats for your concert experience. Options typically include general admission, seated sections, and VIP areas. Would you like tips on the best seats for concert viewing?",
+                'help': "I'm here to help with any concert ticketing questions! You can also reach our customer service team via email at support@concerttickets.com or by phone at (555) 123-4567 during business hours."
+            },
+            quickReplies: {
+                'upcoming concerts': "Here are our featured upcoming concerts for the next month:\n- Taylor Swift World Tour - June 5th\n- Imagine Dragons - June 12th\n- BTS - June 18th\n- Adele - June 25th\nWould you like details about any of these shows?",
+                'ticket info': "Tickets can be purchased online through our secure checkout system. We offer mobile tickets delivered to your email or app, print-at-home options, and will-call pickup. What kind of tickets are you interested in?",
+                'refund policy': "We offer full refunds for cancellations made at least 72 hours before the event. Within 72 hours, you can receive credit toward future tickets or try to exchange for another show. Would you like to know about our ticket insurance option?",
+                'venue directions': "Each venue page on our website includes detailed directions, parking information, and public transportation options. We also provide venue maps showing entrances, amenities, and seating layouts. Which venue are you visiting?"
+            },
+            fallback: "I'm not sure I understand. Could you please rephrase your question about concert tickets or events?"
+        };
+
+        // Toggle chat box visibility
+        chatButton.addEventListener('click', function() {
+            if (chatBox.style.display === 'block') {
+                chatBox.style.display = 'none';
+            } else {
+                chatBox.style.display = 'block';
+                chatInput.focus();
+            }
+        });
+        
+        closeChat.addEventListener('click', function() {
+            chatBox.style.display = 'none';
+        });
+        
+        // Enable/disable send button based on input
+        chatInput.addEventListener('input', function() {
+            sendButton.disabled = !chatInput.value.trim();
+        });
+        
+        // Send message on Enter key
+        chatInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && chatInput.value.trim()) {
+                sendMessage();
+            }
+        });
+        
+        sendButton.addEventListener('click', sendMessage);
+        
+        // Handle quick reply clicks
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('quick-reply')) {
+                const replyText = e.target.textContent.toLowerCase();
+                chatInput.value = replyText;
+                sendMessage();
+            }
+        });
+        
+        function sendMessage() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+            
+            // Add user message to chat
+            addMessage(message, 'user');
+            chatInput.value = '';
+            sendButton.disabled = true;
+            
+            // Show typing indicator
+            typingIndicator.style.display = 'block';
+            
+            // Simulate bot thinking time
+            setTimeout(function() {
+                typingIndicator.style.display = 'none';
+                
+                // Get bot response
+                const response = getBotResponse(message);
+                addMessage(response, 'bot');
+                
+                // Scroll to bottom of chat
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }, 1000);
+        }
+        
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            messageDiv.classList.add(sender + '-message');
+            messageDiv.textContent = text;
+            
+            // Remove quick replies when user sends a message
+            if (sender === 'user') {
+                const quickReplies = document.querySelector('.quick-replies');
+                if (quickReplies) {
+                    quickReplies.remove();
+                }
+            }
+            
+            // Add quick replies for certain bot responses
+            if (sender === 'bot' && shouldAddQuickReplies(text)) {
+                setTimeout(() => {
+                    addQuickReplies();
+                }, 500);
+            }
+            
+            chatBody.appendChild(messageDiv);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+        
+        function shouldAddQuickReplies(message) {
+            // Add quick replies after certain responses
+            return !message.includes("Would you like") && !message.includes("Which venue") && 
+                   !message.includes("Is there a specific") && !message.includes("Would you like details");
+        }
+        
+        function addQuickReplies() {
+            const quickRepliesDiv = document.createElement('div');
+            quickRepliesDiv.classList.add('quick-replies');
+            
+            const replies = [
+                'How do I buy tickets?',
+                'Upcoming shows',
+                'Ticket prices',
+                'Contact support'
+            ];
+            
+            replies.forEach(reply => {
+                const replyButton = document.createElement('div');
+                replyButton.classList.add('quick-reply');
+                replyButton.textContent = reply;
+                quickRepliesDiv.appendChild(replyButton);
+            });
+            
+            chatBody.appendChild(quickRepliesDiv);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+        
+        function getBotResponse(userInput) {
+            const input = userInput.toLowerCase();
+            
+            // Check for quick replies
+            for (const [key, response] of Object.entries(knowledgeBase.quickReplies)) {
+                if (input.includes(key)) {
+                    return response;
+                }
+            }
+            
+            // Check for greetings
+            for (const greeting of knowledgeBase.greetings) {
+                if (input.includes(greeting)) {
+                    return knowledgeBase.responses.greeting;
+                }
+            }
+            
+            // Check for farewells
+            for (const farewell of knowledgeBase.farewells) {
+                if (input.includes(farewell)) {
+                    return knowledgeBase.responses.farewell;
+                }
+            }
+            
+            // Check for keywords and generate response
+            for (const [category, keywords] of Object.entries(knowledgeBase.keywords)) {
+                for (const keyword of keywords) {
+                    if (input.includes(keyword)) {
+                        return knowledgeBase.responses[category];
+                    }
+                }
+            }
+            
+            // Handle specific questions with contextual answers
+            if (input.includes('how') && input.includes('buy')) {
+                return "You can buy tickets in 3 easy steps: 1) Browse our events and select your concert, 2) Choose your seats and ticket quantity, 3) Complete payment through our secure checkout. Would you like me to walk you through the process?";
+            }
+            
+            if (input.includes('payment') || input.includes('pay')) {
+                return "We accept all major credit cards, PayPal, Apple Pay, and Google Pay. All transactions are secure and encrypted. For certain events, we also offer payment plans for ticket purchases.";
+            }
+            
+            if (input.includes('mobile') || input.includes('app')) {
+                return "Yes! Our mobile app is available for both iOS and Android. You can browse concerts, purchase tickets, and access your mobile tickets all in one place. Your tickets will be automatically added to your digital wallet.";
+            }
+            
+            // Fallback response
+            return knowledgeBase.fallback;
+        }
+    });
+</script>
+</body>
+</html>

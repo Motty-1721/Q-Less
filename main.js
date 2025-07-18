@@ -13,7 +13,7 @@ document.querySelectorAll('.video-item').forEach(item => {
 
 
 //===================================================================================================DETAILS PAGE=============================================================================================
-
+// Data for each events
 const eventsData = [
   {
     id: 1,
@@ -494,7 +494,7 @@ const eventsData = [
   {
     id: 11,
     title: "WISP LIVE IN MANILA",
-    date: "DECEMBER 05, 2024",
+    date: "DECEMBER 05, 2026",
     time: "8:00PM",
     venue: "Skydome, SM North EDSA, Quezon City, Philippines",
     image: "pics/all_6.webp",
@@ -621,7 +621,7 @@ const eventsData = [
   {
     id: 14,
     title: "LAST DINOSAURS LIVE IN MANILA",
-    date: "DECEMBER 08, 2024",
+    date: "DECEMBER 08, 2026",
     time: "8:00PM",
     venue: "Skydome, SM North EDSA, Quezon City, Philippines",
     image: "pics/all_9.webp",
@@ -653,8 +653,8 @@ const eventsData = [
   },
   {
     id: 15,
-    title: "2024 ZEROBASEONE THE FIRST TOUR [TIMELESS WORLD] IN MANILA",
-    date: "OCTOBER 12, 2024",
+    title: "2026 ZEROBASEONE THE FIRST TOUR [TIMELESS WORLD] IN MANILA",
+    date: "OCTOBER 12, 2026",
     time: "6:00PM",
     venue: "SM Mall of Asia Arena, Pasay City, Philippines",
     image: "pics/all_10.webp",
@@ -721,8 +721,8 @@ const eventsData = [
   },
   {
     id: 16,
-    title: "2024 IU HEREH WORLD TOUR CONCERT IN MANILA (BULACAN)",
-    date: "JUNE 1, 2024",
+    title: "2026 IU HEREH WORLD TOUR CONCERT IN MANILA (BULACAN)",
+    date: "JUNE 1, 2026",
     time: "6:30PM",
     venue: "Philippine Arena, Bulacan, Philippines",
     image: "pics/all_11.webp",
@@ -811,7 +811,7 @@ const eventsData = [
   {
     id: 17,
     title: "PULP SUMMER SLAM XX: WORLDS COLLIDE – THE END",
-    date: "MARCH 23, 2024",
+    date: "MARCH 23, 2026",
     time: "1:00PM",
     venue: "Amoranto Stadium, Quezon City, Philippines",
     image: "pics/all_12.webp",
@@ -843,12 +843,12 @@ const eventsData = [
   },
   {
     id: 18,
-    title: "CHA EUN-WOO 2024 JUST ONE 10 MINUTE [MYSTERY ELEVATOR] IN MANILA",
-    date: "MARCH 16, 2024",
+    title: "CHA EUN-WOO 2026 JUST ONE 10 MINUTE [MYSTERY ELEVATOR] IN MANILA",
+    date: "MARCH 16, 2026",
     time: "7:00PM",
     venue: "SM Mall of Asia Arena, Pasay City, Philippines",
     image: "pics/all_13.webp",
-    description: "Step into the world of CHA EUN-WOO as he brings his 2024 'Just One 10 Minute [Mystery Elevator]' tour to Manila. Fans can expect a captivating night filled with charm, visuals, and intimate stage moments from the beloved ASTRO member.",
+    description: "Step into the world of CHA EUN-WOO as he brings his 2026 'Just One 10 Minute [Mystery Elevator]' tour to Manila. Fans can expect a captivating night filled with charm, visuals, and intimate stage moments from the beloved ASTRO member.",
     venueInfo: "The SM Mall of Asia Arena, a premier concert venue in the country, sets the perfect stage for Cha Eun-Woo’s unforgettable fan-con experience.",
     ticketTypes: [
       {
@@ -904,12 +904,12 @@ const eventsData = [
   },
   {
     id: 19,
-    title: "RADWIMPS WORLD TOUR 2024 “The way you yawn, and the outcry of Peace” IN MANILA",
-    date: "MAY 01, 2024",
+    title: "RADWIMPS WORLD TOUR 2026 “The way you yawn, and the outcry of Peace” IN MANILA",
+    date: "MAY 01, 2026",
     time: "8:00PM",
     venue: "Smart Araneta Coliseum, Quezon City, Philippines",
     image: "pics/all_14.webp",
-    description: "RADWIMPS returns to Manila with their 2024 world tour, bringing their unique fusion of rock, emotion, and cinematic flair. Fans can expect powerful live renditions of their biggest hits and a night of musical storytelling.",
+    description: "RADWIMPS returns to Manila with their 2026 world tour, bringing their unique fusion of rock, emotion, and cinematic flair. Fans can expect powerful live renditions of their biggest hits and a night of musical storytelling.",
     venueInfo: "Smart Araneta Coliseum provides an immersive concert environment, perfect for RADWIMPS' emotionally charged and visually stunning performance.",
     ticketTypes: [
       {
@@ -951,12 +951,12 @@ const eventsData = [
   },
   {
     id: 19,
-    title: "RADWIMPS WORLD TOUR 2024 “The way you yawn, and the outcry of Peace” IN MANILA",
-    date: "MAY 01, 2024",
+    title: "RADWIMPS WORLD TOUR 2026 “The way you yawn, and the outcry of Peace” IN MANILA",
+    date: "MAY 01, 2026",
     time: "8:00PM",
     venue: "Smart Araneta Coliseum, Quezon City, Philippines",
     image: "pics/all_14.webp",
-    description: "RADWIMPS returns to Manila with their 2024 world tour, bringing their unique fusion of rock, emotion, and cinematic flair. Fans can expect powerful live renditions of their biggest hits and a night of musical storytelling.",
+    description: "RADWIMPS returns to Manila with their 2026 world tour, bringing their unique fusion of rock, emotion, and cinematic flair. Fans can expect powerful live renditions of their biggest hits and a night of musical storytelling.",
     venueInfo: "Smart Araneta Coliseum provides an immersive concert environment, perfect for RADWIMPS' emotionally charged and visually stunning performance.",
     ticketTypes: [
       {
@@ -998,8 +998,8 @@ const eventsData = [
   },
   {
     id: 20,
-    title: "ARCH ENEMY DECEIVERS ASIA TOUR 2024",
-    date: "MAY 15, 2024",
+    title: "ARCH ENEMY DECEIVERS ASIA TOUR 2026",
+    date: "MAY 15, 2026",
     time: "8:00PM",
     venue: "Skydome, SM City North Edsa, Quezon City, Philippines",
     image: "pics/all_15.webp",
@@ -1032,7 +1032,7 @@ const eventsData = [
   {
     id: 21,
     title: "YESUNG SOLO CONCERT ‘UNFADING SENSE’ IN MANILA",
-    date: "JANUARY 06, 2024",
+    date: "JANUARY 06, 2026",
     time: "6:00PM",
     venue: "New Frontier Theater, Quezon City, Philippines",
     image: "pics/all_16.webp",

@@ -6,17 +6,51 @@
     <meta content="width=device-width, initial-scale=1" name="viewport" />
     <title>About Us - Q-LESS</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-    </style>
     <link rel="stylesheet" href="styles.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
 </head>
 
 <body class="bg-white text-gray-900">
+
+    <div class="ctc-chat-container">
+        <div class="ctc-chat-button" id="ctcChatButton">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+        </div>
+
+        <div class="ctc-chat-window" id="ctcChatWindow">
+            <div class="ctc-chat-header">
+                <div>Concert Support</div>
+                <button class="ctc-close-btn" id="ctcCloseBtn">&times;</button>
+            </div>
+
+            <div class="ctc-chat-messages" id="ctcChatMessages">
+                <!-- Messages will be added here dynamically -->
+            </div>
+
+            <div class="ctc-typing-indicator" id="ctcTypingIndicator">
+                <span class="ctc-dot"></span>
+                <span class="ctc-dot"></span>
+                <span class="ctc-dot"></span>
+            </div>
+
+            <div class="ctc-chat-input">
+                <input type="text" class="ctc-message-input" id="ctcMessageInput"
+                    placeholder="Ask about concert tickets...">
+                <button class="ctc-send-button" id="ctcSendButton">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <nav class="navbar" id="navbar">
         <a href="index.html" class="logo">
             <div class="logo-icon"></div>
@@ -160,165 +194,98 @@
             </div>
         </div>
     </section>
-    <div class="bg-black text-white">
+
+    <div class="bg-black text-white mt-55">
+        <!-- Main Footer Content with Background Image -->
         <div class="relative">
-            <img alt="Concert background with audience silhouettes and colorful lighting"
-                class="absolute inset-0 w-full h-full object-cover opacity-50" height="1080"
-                src="pics/concert_background.jpeg" width="1920" />
-            <div class="relative z-10 flex flex-col md:flex-row justify-between p-8 md:p-16">
-                <div class="md:w-1/2">
-                    <h1 class="text-5xl font-bold mb-4">
-                        Q-LESS
-                    </h1>
-                    <p class="mb-4">
-                        Created on a sincere, intense passion for live entertainment, Q-Less is a trailblazer and
-                        innovator with some of the biggest names in Philippine concert history, including pop punk
-                        heroes All Time Low, Mayday Parade, and The Maine; metal legends Slayer, Megadeth, and Anthrax;
-                        and internationally acclaimed KPOP idols BTS, Enhypen, and Seventeen, Q-Less, one of the
-                        country's largest and most diverse companies in the Concerts/Live Events industry, has produced
-                        historic events, concerts, and music festivals.
+            <!-- Background Image -->
+            <img alt="Concert background" class="absolute inset-0 w-full h-full object-cover opacity-40"
+                src="pics/concert_background.jpeg" />
+
+            <!-- Content Overlay -->
+            <div class="relative z-10 container mx-auto px-6 py-12">
+                <!-- Top Section with Logo and Description -->
+                <div class="flex flex-col items-center text-center mb-10">
+                    <img alt="Q-LESS Live World logo" class="h-24 mb-6" src="pics/LOGO.jpg" />
+                    <h1 class="text-4xl font-bold mb-4">Q-LESS</h1>
+                    <p class="max-w-2xl mb-4">
+                        A trailblazer in Philippine concert history, featuring pop punk heroes All Time Low,
+                        Mayday Parade, and The Maine; metal legends Slayer, Megadeth, and Anthrax;
+                        and internationally acclaimed K-pop acts BTS, Enhypen, and Seventeen.
                     </p>
                 </div>
-                <div class="md:w-1/2 md:pl-16">
-                    <div class="mb-8">
-                        <h2 class="text-2xl font-bold mb-2">
-                            Office Hours
-                        </h2>
-                        <p>
-                            Monday to Friday: 9AM to 7PM
-                        </p>
-                        <p>
-                            Saturday: 9AM to 2PM
-                        </p>
-                        <div class="mt-4">
-                            <p class="font-bold">
-                                For Business Purposes:
-                            </p>
-                            <p>
-                                - business@qless.ph
-                            </p>
-                            <p>
-                                - partnerships@qless.ph
-                            </p>
-                        </div>
-                        <div class="mt-4">
-                            <p class="font-bold">
-                                For Media &amp; Promotions:
-                            </p>
-                            <p>
-                                media@qless.ph
-                            </p>
-                        </div>
-                        <div class="mt-4">
-                            <p class="font-bold">
-                                For Customer Concerns:
-                            </p>
-                            <p>
-                                sales@qless.ph
-                            </p>
-                        </div>
-                        <div class="mt-4">
-                            <p class="font-bold">
-                                Phone:
-                            </p>
-                            <p>
-                                +639178892233
-                            </p>
+
+                <!-- Three Column Layout for Contact Info -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12">
+                    <!-- Hours & Phone Column -->
+                    <div class="text-center bg-black/70 p-6 rounded-lg">
+                        <h2 class="text-xl font-bold mb-4 text-red-500">Office Hours</h2>
+                        <p>Monday to Friday: 9AM to 7PM</p>
+                        <p>Saturday: 9AM to 2PM</p>
+                        <div class="mt-6">
+                            <h2 class="text-xl font-bold mb-2 text-red-500">Phone</h2>
+                            <p>+639178892233</p>
                         </div>
                     </div>
 
-                    <div class="mb-8">
-                        <p class="font-bold">
-                            Career Opportunities:
-                        </p>
-                        <p>
-                            work@qless.ph
-                        </p>
+                    <!-- Email Contact Column -->
+                    <div class="text-center bg-black/70 p-6 rounded-lg">
+                        <h2 class="text-xl font-bold mb-4 text-red-500">Contact Us</h2>
+                        <p><strong>Business:</strong> business@qless.ph</p>
+                        <p><strong>Partnerships:</strong> partnerships@qless.ph</p>
+                        <p><strong>Media:</strong> media@qless.ph</p>
+                        <p><strong>Customer Support:</strong> sales@qless.ph</p>
+                        <p><strong>Careers:</strong> work@qless.ph</p>
+                        <p><strong>Internships:</strong> intern@qless.ph</p>
                     </div>
-                    <div class="mb-8">
-                        <p class="font-bold">
-                            For Internship:
-                        </p>
-                        <p>
-                            intern@qless.ph
-                        </p>
-                    </div>
-                    <div class="mt-8">
-                        <p class="font-bold">
-                            Q-LESS MAGAZINE
-                        </p>
-                        <div class="flex space-x-4 mt-2">
-                            <a href="#">
-                                <i class="fab fa-facebook fa-2x">
-                                </i>
+
+                    <!-- Social Media Column -->
+                    <div class="text-center bg-black/70 p-6 rounded-lg">
+                        <h2 class="text-xl font-bold mb-4 text-red-500">Follow Us</h2>
+                        <div class="flex justify-center space-x-6 mb-6">
+                            <a href="https://facebook.com/" target="_blank" rel="noopener noreferrer"
+                                aria-label="Facebook" class="hover:text-red-500 transition-colors">
+                                <i class="fab fa-facebook fa-2x"></i>
                             </a>
-                            <a href="#">
-                                <i class="fab fa-twitter fa-2x">
-                                </i>
+                            <a href="https://x.com/home" target="_blank" rel="noopener noreferrer" aria-label="Twitter"
+                                class="hover:text-red-500 transition-colors">
+                                <i class="fab fa-twitter fa-2x"></i>
                             </a>
-                            <a href="#">
-                                <i class="fab fa-instagram fa-2x">
-                                </i>
+                            <a href="https://instagram.com/" target="_blank" rel="noopener noreferrer"
+                                aria-label="Instagram" class="hover:text-red-500 transition-colors">
+                                <i class="fab fa-instagram fa-2x"></i>
                             </a>
-                            <a href="#">
-                                <i class="fab fa-youtube fa-2x">
-                                </i>
+                            <a href="https://youtube.com/" target="_blank" rel="noopener noreferrer"
+                                aria-label="YouTube" class="hover:text-red-500 transition-colors">
+                                <i class="fab fa-youtube fa-2x"></i>
                             </a>
                         </div>
                     </div>
-                    <div class="mt-8">
-                        <p class="font-bold">
-                            Q-LESS LIVE
-                        </p>
-                        <div class="flex space-x-4 mt-2">
-                            <a href="#">
-                                <i class="fab fa-facebook fa-2x">
-                                </i>
-                            </a>
-                            <a href="#">
-                                <i class="fab fa-twitter fa-2x">
-                                </i>
-                            </a>
-                            <a href="#">
-                                <i class="fab fa-instagram fa-2x">
-                                </i>
-                            </a>
-                            <a href="#">
-                                <i class="fab fa-youtube fa-2x">
-                                </i>
-                            </a>
-                        </div>
-                    </div>
+
+                </div>
+
+                <!-- Brand Logos Row -->
+                <div
+                    class="flex flex-wrap justify-center items-center gap-8 border-t border-gray-700 pt-8 rounded-lg p-6">
+                    <img alt="Q-LESS Magazine logo" class="h-10" src="pics/MAGAZINE.jpg" />
+                    <img alt="Happie Hour logo" class="h-10" src="pics/Happie Hour.jpg" />
+                    <img alt="Seoul Train logo" class="h-10" src="pics/Seoul Train Logo.jpeg" />
+                    <img alt="Merchandise Shop logo" class="h-10" src="pics/Merch Shop.jpg" />
+                    <img alt="Q-LESS Studios logo" class="h-10" src="pics/STUDIO.jpg" />
                 </div>
             </div>
         </div>
-        <div>
-            <footer class="py-8">
-                <div class="container mx-auto flex flex-wrap justify-center items-center space-x-6">
-                    <img alt="Q-LESS Live World logo" class="h-16" height="100" src="pics/LOGO.jpg" width="100" />
-                    <img alt="Q-LESS Magazine logo" class="h-16" height="100" src="pics/MAGAZINE.jpg" width="100" />
-                    <img alt="Happie Hour logo" class="h-16" height="100" src="pics/Happie Hour.jpg" width="100" />
-                    <img alt="Seoul Train logo" class="h-16" height="100" src="pics/Seoul Train Logo.jpeg"
-                        width="100" />
-                    <img alt="Merchandise Shop logo" class="h-16" height="100" src="pics/Merch Shop.jpg" width="100" />
-                    <img alt="Q-LESS Studios logo" class="h-16" height="100" src="pics/STUDIO.jpg" width="100" />
-                    <img alt="Mini Mall logo" class="h-16" height="100" src="pics/mini mall.png" width="100" />
-                </div>
-                <div class="text-center mt-4 text-sm">
-                    <p>
-                        Copyright © 2025 |
-                        <span class="text-red-600">
-                            Q-LESS Productions Inc.
-                        </span>
-                        All rights reserved.
-                    </p>
-                </div>
-            </footer>
+
+        <!-- Copyright Bar -->
+        <div class="border-t border-gray-700 py-4">
+            <div class="container mx-auto text-center text-sm">
+                <p>Copyright © 2025 | <span class="text-red-500">Q-LESS Productions Inc.</span> All rights reserved.</p>
+            </div>
         </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    </div>
+    <script src="ai.js"></script>
     <script src="main.js"></script>
     <script type="module" src="testimony.js"></script>
-
 </body>
 
 </html>

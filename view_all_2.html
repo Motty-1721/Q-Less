@@ -11,6 +11,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
     <style>
         :where([class^="ri-"])::before {
             content: "\f3c2";
@@ -431,6 +433,209 @@
                 overflow: hidden;
             }
         }
+
+        .ctc-chat-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+            font-family: Arial, sans-serif;
+        }
+
+        .ctc-chat-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #6c5ce7;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .ctc-chat-button:hover {
+            transform: scale(1.05);
+            background-color: #5b4ccc;
+        }
+
+        .ctc-chat-window {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 350px;
+            height: 500px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+            pointer-events: none;
+        }
+
+        .ctc-chat-window.ctc-active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: all;
+        }
+
+        .ctc-chat-header {
+            background-color: #6c5ce7;
+            color: white;
+            padding: 16px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ctc-close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .ctc-chat-messages {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .ctc-message {
+            max-width: 80%;
+            padding: 10px 14px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .ctc-bot-message {
+            background-color: #f1f0ff;
+            color: #333;
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+        }
+
+        .ctc-user-message {
+            background-color: #6c5ce7;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
+
+        .ctc-chat-input {
+            display: flex;
+            padding: 12px;
+            border-top: 1px solid #eee;
+            background-color: white;
+        }
+
+        .ctc-message-input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .ctc-send-button {
+            background-color: #6c5ce7;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin-left: 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .ctc-send-button:hover {
+            background-color: #5b4ccc;
+        }
+
+        .ctc-typing-indicator {
+            display: none;
+            padding: 10px 14px;
+            background-color: #f1f0ff;
+            border-radius: 18px;
+            border-bottom-left-radius: 5px;
+            color: #333;
+            align-self: flex-start;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        .ctc-typing-indicator.ctc-active {
+            display: block;
+        }
+
+        .ctc-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #888;
+            animation: ctc-typing 1.4s infinite both;
+        }
+
+        .ctc-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .ctc-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes ctc-typing {
+
+            0%,
+            60%,
+            100% {
+                transform: translateY(0);
+            }
+
+            30% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .ctc-quick-replies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .ctc-quick-reply {
+            background-color: #f1f0ff;
+            border: 1px solid #6c5ce7;
+            color: #6c5ce7;
+            border-radius: 16px;
+            padding: 6px 12px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .ctc-quick-reply:hover {
+            background-color: #e9e6ff;
+        }
     </style>
 </head>
 
@@ -535,7 +740,8 @@
                             </div>
                         </div>
                         <div class="event-details p-5">
-                            <h3 class="event-title text-xl font-bold text-gray-900 mb-3">BOYNEXTDOOR TOUR ‘KNOCK ON Vol.1’ IN MANILA</h3>
+                            <h3 class="event-title text-xl font-bold text-gray-900 mb-3">BOYNEXTDOOR TOUR ‘KNOCK ON
+                                Vol.1’ IN MANILA</h3>
                             <div class="flex items-start">
                                 <div
                                     class="event-date flex flex-col items-center justify-center bg-gray-100 rounded-lg p-2 mr-4 w-16">
@@ -547,7 +753,7 @@
                                     <p class="venue text-gray-700 flex items-center mb-1">
                                         <span class="w-5 h-5 flex items-center justify-center mr-1"><i
                                                 class="ri-map-pin-line"></i></span>
-                                                Smart Araneta Coliseum
+                                        Smart Araneta Coliseum
                                     </p>
                                     <p class="text-gray-600 flex items-center">
                                         <span class="w-5 h-5 flex items-center justify-center mr-1"><i
@@ -584,7 +790,7 @@
                                     <p class="venue text-gray-700 flex items-center mb-1">
                                         <span class="w-5 h-5 flex items-center justify-center mr-1"><i
                                                 class="ri-map-pin-line"></i></span>
-                                                Skydome, SM North EDSA
+                                        Skydome, SM North EDSA
                                     </p>
                                     <p class="text-gray-600 flex items-center">
                                         <span class="w-5 h-5 flex items-center justify-center mr-1"><i
@@ -609,7 +815,8 @@
                             </div>
                         </div>
                         <div class="event-details p-5">
-                            <h3 class="event-title text-xl font-bold text-gray-900 mb-3">JINJER ASIAN TOUR 2025 IN MANILA</h3>
+                            <h3 class="event-title text-xl font-bold text-gray-900 mb-3">JINJER ASIAN TOUR 2025 IN
+                                MANILA</h3>
                             <div class="flex items-start">
                                 <div
                                     class="event-date flex flex-col items-center justify-center bg-gray-100 rounded-lg p-2 mr-4 w-16">
@@ -646,7 +853,8 @@
                             </div>
                         </div>
                         <div class="event-details p-5">
-                            <h3 class="event-title text-xl font-bold text-gray-900 mb-3">THE CORRS: FROM MANILA WITH LOVE</h3>
+                            <h3 class="event-title text-xl font-bold text-gray-900 mb-3">THE CORRS: FROM MANILA WITH
+                                LOVE</h3>
                             <div class="flex items-start">
                                 <div
                                     class="event-date flex flex-col items-center justify-center bg-gray-100 rounded-lg p-2 mr-4 w-16">
@@ -658,7 +866,7 @@
                                     <p class="venue text-gray-700 flex items-center mb-1">
                                         <span class="w-5 h-5 flex items-center justify-center mr-1"><i
                                                 class="ri-map-pin-line"></i></span>
-                                                Smart Araneta Coliseum
+                                        Smart Araneta Coliseum
                                     </p>
                                     <p class="text-gray-600 flex items-center">
                                         <span class="w-5 h-5 flex items-center justify-center mr-1"><i
@@ -683,7 +891,8 @@
                             </div>
                         </div>
                         <div class="event-details p-5">
-                            <h3 class="event-title text-xl font-bold text-gray-900 mb-3">LAST DINOSAURS LIVE IN MANILA</h3>
+                            <h3 class="event-title text-xl font-bold text-gray-900 mb-3">LAST DINOSAURS LIVE IN MANILA
+                            </h3>
                             <div class="flex items-start">
                                 <div
                                     class="event-date flex flex-col items-center justify-center bg-gray-100 rounded-lg p-2 mr-4 w-16">
@@ -720,7 +929,8 @@
                             </div>
                         </div>
                         <div class="event-details p-5">
-                            <h3 class="event-title text-xl font-bold text-gray-900 mb-3">2025 ZEROBASEONE THE FIRST TOUR [TIMELESS WORLD] IN MANILA</h3>
+                            <h3 class="event-title text-xl font-bold text-gray-900 mb-3">2025 ZEROBASEONE THE FIRST TOUR
+                                [TIMELESS WORLD] IN MANILA</h3>
                             <div class="flex items-start">
                                 <div
                                     class="event-date flex flex-col items-center justify-center bg-gray-100 rounded-lg p-2 mr-4 w-16">
@@ -769,12 +979,12 @@
                                     <p class="venue text-gray-700 flex items-center mb-1">
                                         <span class="w-5 h-5 flex items-center justify-center mr-1"><i
                                                 class="ri-map-pin-line"></i></span>
-                                                Philippine Arena
+                                        Philippine Arena
                                     </p>
                                     <p class="text-gray-600 flex items-center">
                                         <span class="w-5 h-5 flex items-center justify-center mr-1"><i
                                                 class="ri-time-line"></i></span>
-                                                6:30PM
+                                        6:30PM
                                     </p>
                                 </div>
                             </div>
@@ -794,7 +1004,8 @@
                             </div>
                         </div>
                         <div class="event-details p-5">
-                            <h3 class="event-title text-xl font-bold text-gray-900 mb-3">PULP SUMMER SLAM XX: WORLDS COLLIDE – THE END</h3>
+                            <h3 class="event-title text-xl font-bold text-gray-900 mb-3">PULP SUMMER SLAM XX: WORLDS
+                                COLLIDE – THE END</h3>
                             <div class="flex items-start">
                                 <div
                                     class="event-date flex flex-col items-center justify-center bg-gray-100 rounded-lg p-2 mr-4 w-16">
@@ -806,12 +1017,12 @@
                                     <p class="venue text-gray-700 flex items-center mb-1">
                                         <span class="w-5 h-5 flex items-center justify-center mr-1"><i
                                                 class="ri-map-pin-line"></i></span>
-                                                Amoranto Stadium Q.C
+                                        Amoranto Stadium Q.C
                                     </p>
                                     <p class="text-gray-600 flex items-center">
                                         <span class="w-5 h-5 flex items-center justify-center mr-1"><i
                                                 class="ri-time-line"></i></span>
-                                                1:00PM
+                                        1:00PM
                                     </p>
                                 </div>
                             </div>
@@ -831,7 +1042,8 @@
                             </div>
                         </div>
                         <div class="event-details p-5">
-                            <h3 class="event-title text-xl font-bold text-gray-900 mb-3">CHA EUN-WOO 2024 JUST ONE 10 MINUTE [MYSTERY ELEVATOR] IN MANILA</h3>
+                            <h3 class="event-title text-xl font-bold text-gray-900 mb-3">CHA EUN-WOO 2025 JUST ONE 10
+                                MINUTE [MYSTERY ELEVATOR] IN MANILA</h3>
                             <div class="flex items-start">
                                 <div
                                     class="event-date flex flex-col items-center justify-center bg-gray-100 rounded-lg p-2 mr-4 w-16">
@@ -843,7 +1055,7 @@
                                     <p class="venue text-gray-700 flex items-center mb-1">
                                         <span class="w-5 h-5 flex items-center justify-center mr-1"><i
                                                 class="ri-map-pin-line"></i></span>
-                                                SM Mall of Asia Arena
+                                        SM Mall of Asia Arena
                                     </p>
                                     <p class="text-gray-600 flex items-center">
                                         <span class="w-5 h-5 flex items-center justify-center mr-1"><i
@@ -871,153 +1083,137 @@
             </div>
         </main>
     </div>
-    <div class="bg-black text-white"><div class="relative">
-        <img alt="Concert background with audience silhouettes and colorful lighting" class="absolute inset-0 w-full h-full object-cover opacity-50" height="1080" src="pics/concert_background.jpeg" width="1920"/>
-        <div class="relative z-10 flex flex-col md:flex-row justify-between p-8 md:p-16">
-         <div class="md:w-1/2">
-          <h1 class="text-5xl font-bold mb-4">
-           Q-LESS
-          </h1>
-          <p class="mb-4">
-             Created on a sincere, intense passion for live entertainment, Q-Less is a trailblazer and innovator with some of the biggest names in Philippine concert history, including pop punk heroes All Time Low, Mayday Parade, and The Maine; metal legends Slayer, Megadeth, and Anthrax; and internationally acclaimed KPOP idols BTS, Enhypen, and Seventeen, Q-Less, one of the country's largest and most diverse companies in the Concerts/Live Events industry, has produced historic events, concerts, and music festivals.
-          </p>
-         </div>
-         <div class="md:w-1/2 md:pl-16">
-          <div class="mb-8">
-          <h2 class="text-2xl font-bold mb-2">
-           Office Hours
-         </h2>
-         <p>
-          Monday to Friday: 9AM to 7PM
-         </p>
-         <p>
-          Saturday: 9AM to 2PM
-         </p>
-         <div class="mt-4">
-         <p class="font-bold">
-         For Business Purposes:
-            </p>
-            <p>
-             - business@qless.ph
-            </p>
-            <p>
-             - partnerships@qless.ph
-            </p>
-           </div>
-           <div class="mt-4">
-            <p class="font-bold">
-             For Media &amp; Promotions:
-            </p>
-            <p>
-             media@qless.ph
-            </p>
-           </div>
-           <div class="mt-4">
-            <p class="font-bold">
-             For Customer Concerns:
-            </p>
-            <p>
-             sales@qless.ph
-            </p>
-           </div>
-           <div class="mt-4">
-            <p class="font-bold">
-             Phone:
-            </p>
-            <p>
-             +639178892233
-            </p>
-           </div>
-          </div>
-          
-          <div class="mb-8">
-           <p class="font-bold">
-            Career Opportunities:
-           </p>
-           <p>
-            work@qless.ph
-           </p>
-          </div>
-          <div class="mb-8">
-           <p class="font-bold">
-            For Internship:
-           </p>
-           <p>
-            intern@qless.ph
-           </p>
-          </div>
-          <div class="mt-8">
-          <p class="font-bold">
-            Q-LESS MAGAZINE
-           </p>
-           <div class="flex space-x-4 mt-2">
-            <a href="#">
-             <i class="fab fa-facebook fa-2x">
-             </i>
-            </a>
-            <a href="#">
-             <i class="fab fa-twitter fa-2x">
-             </i>
-            </a>
-            <a href="#">
-             <i class="fab fa-instagram fa-2x">
-             </i>
-            </a>
-            <a href="#">
-             <i class="fab fa-youtube fa-2x">
-             </i>
-            </a>
-           </div>
-          </div>
-          <div class="mt-8">
-           <p class="font-bold">
-             Q-LESS LIVE
-            </p>
-            <div class="flex space-x-4 mt-2">
-             <a href="#">
-              <i class="fab fa-facebook fa-2x">
-              </i>
-             </a>
-             <a href="#">
-              <i class="fab fa-twitter fa-2x">
-              </i>
-             </a>
-             <a href="#">
-              <i class="fab fa-instagram fa-2x">
-              </i>
-             </a>
-             <a href="#">
-              <i class="fab fa-youtube fa-2x">
-              </i>
-             </a>
-            </div>
-           </div>
-         </div>
+
+    <div class="ctc-chat-container">
+        <div class="ctc-chat-button" id="ctcChatButton">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
         </div>
-       </div>
-       <div><footer class="py-8">
-         <div class="container mx-auto flex flex-wrap justify-center items-center space-x-6">
-          <img alt="Q-LESS Live World logo" class="h-16" height="100" src="pics/LOGO.jpg" width="100"/>
-          <img alt="Q-LESS Magazine logo" class="h-16" height="100" src="pics/MAGAZINE.jpg" width="100"/>
-          <img alt="Happie Hour logo" class="h-16" height="100" src="pics/Happie Hour.jpg" width="100"/>
-          <img alt="Seoul Train logo" class="h-16" height="100" src="pics/Seoul Train Logo.jpeg" width="100"/>
-          <img alt="Merchandise Shop logo" class="h-16" height="100" src="pics/Merch Shop.jpg" width="100"/>
-          <img alt="Q-LESS Studios logo" class="h-16" height="100" src="pics/STUDIO.jpg" width="100"/>
-          <img alt="Mini Mall logo" class="h-16" height="100" src="pics/mini mall.png" width="100"/>
-         </div>
-         <div class="text-center mt-4 text-sm">
-          <p>
-           Copyright © 2025 |
-           <span class="text-red-600">
-            Q-LESS Productions Inc.
-           </span>
-           All rights reserved.
-          </p>
-         </div>
-        </footer></div>
+
+        <div class="ctc-chat-window" id="ctcChatWindow">
+            <div class="ctc-chat-header">
+                <div>Concert Support</div>
+                <button class="ctc-close-btn" id="ctcCloseBtn">&times;</button>
+            </div>
+
+            <div class="ctc-chat-messages" id="ctcChatMessages">
+                <!-- Messages will be added here dynamically -->
+            </div>
+
+            <div class="ctc-typing-indicator" id="ctcTypingIndicator">
+                <span class="ctc-dot"></span>
+                <span class="ctc-dot"></span>
+                <span class="ctc-dot"></span>
+            </div>
+
+            <div class="ctc-chat-input">
+                <input type="text" class="ctc-message-input" id="ctcMessageInput"
+                    placeholder="Ask about concert tickets...">
+                <button class="ctc-send-button" id="ctcSendButton">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-black text-white mt-55">
+        <!-- Main Footer Content with Background Image -->
+        <div class="relative">
+            <!-- Background Image -->
+            <img alt="Concert background" class="absolute inset-0 w-full h-full object-cover opacity-40"
+                src="pics/concert_background.jpeg" />
+
+            <!-- Content Overlay -->
+            <div class="relative z-10 container mx-auto px-6 py-12">
+                <!-- Top Section with Logo and Description -->
+                <div class="flex flex-col items-center text-center mb-10">
+                    <img alt="Q-LESS Live World logo" class="h-24 mb-6" src="pics/LOGO.jpg" />
+                    <h1 class="text-4xl font-bold mb-4">Q-LESS</h1>
+                    <p class="max-w-2xl mb-4">
+                        A trailblazer in Philippine concert history, featuring pop punk heroes All Time Low,
+                        Mayday Parade, and The Maine; metal legends Slayer, Megadeth, and Anthrax;
+                        and internationally acclaimed K-pop acts BTS, Enhypen, and Seventeen.
+                    </p>
+                </div>
+
+                <!-- Three Column Layout for Contact Info -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12">
+                    <!-- Hours & Phone Column -->
+                    <div class="text-center bg-black/70 p-6 rounded-lg">
+                        <h2 class="text-xl font-bold mb-4 text-red-500">Office Hours</h2>
+                        <p>Monday to Friday: 9AM to 7PM</p>
+                        <p>Saturday: 9AM to 2PM</p>
+                        <div class="mt-6">
+                            <h2 class="text-xl font-bold mb-2 text-red-500">Phone</h2>
+                            <p>+639178892233</p>
+                        </div>
+                    </div>
+
+                    <!-- Email Contact Column -->
+                    <div class="text-center bg-black/70 p-6 rounded-lg">
+                        <h2 class="text-xl font-bold mb-4 text-red-500">Contact Us</h2>
+                        <p><strong>Business:</strong> business@qless.ph</p>
+                        <p><strong>Partnerships:</strong> partnerships@qless.ph</p>
+                        <p><strong>Media:</strong> media@qless.ph</p>
+                        <p><strong>Customer Support:</strong> sales@qless.ph</p>
+                        <p><strong>Careers:</strong> work@qless.ph</p>
+                        <p><strong>Internships:</strong> intern@qless.ph</p>
+                    </div>
+
+                    <!-- Social Media Column -->
+                    <div class="text-center bg-black/70 p-6 rounded-lg">
+                        <h2 class="text-xl font-bold mb-4 text-red-500">Follow Us</h2>
+                        <div class="flex justify-center space-x-6 mb-6">
+                            <a href="https://facebook.com/" target="_blank" rel="noopener noreferrer"
+                                aria-label="Facebook" class="hover:text-red-500 transition-colors">
+                                <i class="fab fa-facebook fa-2x"></i>
+                            </a>
+                            <a href="https://x.com/home" target="_blank" rel="noopener noreferrer" aria-label="Twitter"
+                                class="hover:text-red-500 transition-colors">
+                                <i class="fab fa-twitter fa-2x"></i>
+                            </a>
+                            <a href="https://instagram.com/" target="_blank" rel="noopener noreferrer"
+                                aria-label="Instagram" class="hover:text-red-500 transition-colors">
+                                <i class="fab fa-instagram fa-2x"></i>
+                            </a>
+                            <a href="https://youtube.com/" target="_blank" rel="noopener noreferrer"
+                                aria-label="YouTube" class="hover:text-red-500 transition-colors">
+                                <i class="fab fa-youtube fa-2x"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Brand Logos Row -->
+                <div
+                    class="flex flex-wrap justify-center items-center gap-8 border-t border-gray-700 pt-8 rounded-lg p-6">
+                    <img alt="Q-LESS Magazine logo" class="h-10" src="pics/MAGAZINE.jpg" />
+                    <img alt="Happie Hour logo" class="h-10" src="pics/Happie Hour.jpg" />
+                    <img alt="Seoul Train logo" class="h-10" src="pics/Seoul Train Logo.jpeg" />
+                    <img alt="Merchandise Shop logo" class="h-10" src="pics/Merch Shop.jpg" />
+                    <img alt="Q-LESS Studios logo" class="h-10" src="pics/STUDIO.jpg" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Copyright Bar -->
+        <div class="border-t border-gray-700 py-4">
+            <div class="container mx-auto text-center text-sm">
+                <p>Copyright © 2025 | <span class="text-red-500">Q-LESS Productions Inc.</span> All rights reserved.</p>
+            </div>
+        </div>
+    </div>
     <script src="main.js"></script>
     <script src="search.js"></script>
     <script type="module" src="testimony.js"></script>
+    <script src="ai.js"></script>
 </body>
 
 </html>

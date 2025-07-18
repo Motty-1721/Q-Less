@@ -106,6 +106,12 @@ signupForm.addEventListener('submit', (e) => {
     const email = document.getElementById('signupEmail').value;
     const password = document.getElementById('signupPassword').value;
 
+    // Validate name - prevent numbers
+    if (/\d/.test(name)) {
+        alert('Numbers are not allowed in names. Please use only letters.');
+        return;
+    }
+
     // Save user to localStorage
     const users = JSON.parse(localStorage.getItem('qlessUsers') || '[]');
 
